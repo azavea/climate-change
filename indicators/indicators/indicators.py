@@ -15,11 +15,15 @@ for each city in the input data
 
 If it is a yearly indicator, then month will be set to 1
 
+For best results, the indicator function name should match the indicator name
+found in indicators.models.Indicators
+
 """
 import sys
 
 from generators import yield_monthly_data, yield_yearly_data, yield_multivariable_yearly_data
 from models import ModelVariable
+
 
 
 def monthly_total_precip(data, year, model):
