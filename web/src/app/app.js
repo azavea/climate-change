@@ -17,7 +17,15 @@
   }
 
   angular
-    .module('cc', ['cc.page.city'])
+    .module('cc', [
+        // globally enable a few optional things here so we don't have to enable them
+        // in every child modules
+        'ngAnimate',
+        'ngAria',
+        'ngTouch',
+        // start app modules
+        'cc.page.city'
+    ])
     .config(LogConfig)
     .config(RouterConfig)
     .run(run);

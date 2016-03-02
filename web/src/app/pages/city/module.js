@@ -12,7 +12,8 @@
     }
 
     angular.module('cc.page.city', [
-        'ui.router'
+        'ui.router',
+        'cc.city.switcher'
     ])
     .config(StateConfig);
 

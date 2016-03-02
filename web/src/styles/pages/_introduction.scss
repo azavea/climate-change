@@ -1,0 +1,14 @@
+#introduction {
+    text-align: center;
+}
+
+@media (min-width: $screen-sm-min) {
+    .ding:not(:last-child):after {
+        content: url(../assets/images/triangle-outline.svg);
+        width: 15px;
+        height: 13px;
+        position: absolute;
+        right: -10px;
+        top: 70px;
+    }
+}
