@@ -10,6 +10,8 @@
     "module": true,
     "inject": true,
     "_": false,
+    "d3": false,
+    "topojson": false,
     "turf": false
   }
 }

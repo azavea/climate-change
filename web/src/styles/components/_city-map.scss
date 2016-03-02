@@ -1,0 +1,46 @@
+.city-map {
+  circle {
+    fill: none;
+    stroke: #223537;
+    stroke-opacity: .5;
+  }
+
+  circle {
+    stroke-width: 2px;
+  }
+
+  .graticule {
+    fill: none;
+    stroke: #444;
+  }
+
+  .land {
+    fill: #D4C4A1;
+  }
+
+  .boundary {
+    fill-opacity: 0;
+    stroke: #E38A62;
+  }
+
+  .symbol {
+    fill: #F24F22;
+    fill-opacity: .6;
+    stroke: #8A422D;
+  }
+
+  .symbol :hover {
+    stroke: #000;
+  }
+
+  .legend circle {
+    fill: none;
+    stroke: #ccc;
+  }
+
+  .legend text {
+    fill: #777;
+    font: 8px sans-serif;
+    text-anchor: middle;
+  }
+}

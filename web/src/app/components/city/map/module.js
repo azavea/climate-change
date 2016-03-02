@@ -2,6 +2,6 @@
 (function () {
     'use strict';
 
-    angular.module('cc.city.map', []);
+    angular.module('cc.city.map', ['cc.api']);
 
 })();
