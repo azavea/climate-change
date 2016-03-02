@@ -6,7 +6,8 @@
 
         var module = {
             get: get,
-            list: list
+            list: list,
+            nearest: nearest
         };
         return module;
 
@@ -16,6 +17,10 @@
 
         function list() {
             return CityList;
+        }
+
+        function nearest(point) {
+            return turf.nearest(point, list());
         }
     }
 

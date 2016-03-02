@@ -13,7 +13,7 @@
 
   /** @ngInject */
   function RouterConfig($urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/city/nearest');
   }
 
   angular
