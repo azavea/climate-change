@@ -4,34 +4,12 @@
 </div>
 <div class="modal-body">
     <div class="row">
-        <div class="col-sm-4">
-            <h3>North America</h3>
+        <div class="col-sm-4" ng-repeat="(continent, group) in csmc.cities">
+            <h3>{{ ::continent }}</h3>
             <ul>
-                <li>Country Name</li>
-                <li>Country Name</li>
-                <li>Country Name</li>
-                <li>Country Name</li>
-                <li>Country Name</li>
-            </ul>
-        </div>
-        <div class="col-sm-4">
-            <h3>North America</h3>
-            <ul>
-                <li>Country Name</li>
-                <li>Country Name</li>
-                <li>Country Name</li>
-                <li>Country Name</li>
-                <li>Country Name</li>
-            </ul>
-        </div>
-        <div class="col-sm-4">
-            <h3>North America</h3>
-            <ul>
-                <li>Country Name</li>
-                <li>Country Name</li>
-                <li>Country Name</li>
-                <li>Country Name</li>
-                <li>Country Name</li>
+                <li ng-repeat="c in group track by c.properties.cartodb_id">
+                    <a ng-click="csmc.onCityClicked(c)">{{ ::c.properties.name }}</a>
+                </li>
             </ul>
         </div>
     </div>

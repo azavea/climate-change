@@ -6,16 +6,17 @@
         controllerAs: 'csmc',
         bindToController: true,
         size: 'lg',
-        templateUrl: 'app/components/city/switcher/city-switcher-modal.html'
+        templateUrl: 'app/components/city/switcher/city-switcher-modal.html',
+        windowClass: 'city-switcher-modal'
     };
 
     /** @ngInject */
-    function CitySwitcherController($uibModal) {
+    function CitySwitcherController($state, $uibModal) {
         var vm = this;
         initialize();
 
         function initialize() {
-            vm.cities = [];
+            vm.dropdownCities = _.take(vm.cities.features, 10);
             vm.openModal = openModal;
         }
 
@@ -26,6 +27,11 @@
                 }
             });
             var modal = $uibModal.open(options);
+            modal.result.then(function (city) {
+                if (city && city.properties) {
+                    $state.go('city', { cityId: city.properties.cartodb_id });
+                }
+            });
         }
     }
 
@@ -34,7 +40,9 @@
         var module = {
             restrict: 'EA',
             templateUrl: 'app/components/city/switcher/city-switcher.html',
-            scope: true,
+            scope: {
+                cities: '='
+            },
             controller: 'CitySwitcherController',
             controllerAs: 'csc',
             bindToController: true

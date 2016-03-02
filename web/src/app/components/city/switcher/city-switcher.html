@@ -9,16 +9,11 @@
     <span class="caret"></span>
   </button>
   <ul uib-dropdown-menu class="dropdown-menu" aria-labelledby="city-dropdown-button">
-    <li><a href="#">City, County</a></li>
-    <li><a href="#">City, County</a></li>
-    <li><a href="#">City, County</a></li>
-    <li><a href="#">City, County</a></li>
-    <li><a href="#">City, County</a></li>
-    <li><a href="#">City, County</a></li>
-    <li><a href="#">City, County</a></li>
-    <li><a href="#">City, County</a></li>
-    <li><a href="#">City, County</a></li>
-    <li><a href="#">City, County</a></li>
+    <li><a ui-sref="city({ cityId: 'nearest' })">Nearest by Geolocation</a></li>
+    <li role="separator" class="divider"></li>
+    <li ng-repeat="c in csc.dropdownCities">
+      <a ui-sref="city({ cityId: c.properties.cartodb_id })">{{ ::c.properties.name }}, {{ ::c.properties.adm0_a3 }}</a>
+    </li>
     <li role="separator" class="divider"></li>
     <li><a ng-click="csc.openModal()"><b>View more</b></a></li>
   </ul>
