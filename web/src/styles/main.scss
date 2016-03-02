@@ -2,8 +2,20 @@
  *  If you want to override some bootstrap variables, you have to change values here.
  *  The list of variables are listed here bower_components/bootstrap-sass/assets/stylesheets/bootstrap/_variables.scss
  */
-$navbar-inverse-link-color: #5AADBB;
 $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
+
+/**
+ * Import Font URL
+ * Google Font Library
+ * Only used if not called in head
+ */
+
+/**
+ * Vendor style importing
+ * Any frameworks, javascript plugins, etc
+ * Bootstrap, Foundation, Select2, etc
+ */
+@import "base/variables";
 
 /**
  *  Do not remove the comments below. It's the markers used by wiredep to inject
@@ -11,11 +23,6 @@ $icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/"
  */
 // bower:scss
 // endbower
-
-// TODO: Remove when actual styles are added
-.container {
-    margin-top: 2rem;
-}
 
 /**
  *  Do not remove the comments below. It's the markers used by gulp-inject to inject
