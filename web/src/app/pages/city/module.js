@@ -14,6 +14,7 @@
     angular.module('cc.page.city', [
         'ui.router',
         'cc.api',
+        'cc.geolocation',
         'cc.city.map',
         'cc.city.switcher'
     ])
