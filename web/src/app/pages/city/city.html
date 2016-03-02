@@ -1,11 +1,16 @@
 <div class="header">
     <div class="header-left">
-        <div class="dropdown">
-          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <div class="dropdown" uib-dropdown>
+          <button class="btn btn-default dropdown-toggle"
+                  type="button"
+                  uib-dropdown-toggle
+                  id="city-dropdown-button"
+                  aria-haspopup="true"
+                  aria-expanded="true">
             Switch Cities
             <span class="caret"></span>
           </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+          <ul uib-dropdown-menu class="dropdown-menu" aria-labelledby="city-dropdown-button">
             <li><a href="#">City, County</a></li>
             <li><a href="#">City, County</a></li>
             <li><a href="#">City, County</a></li>

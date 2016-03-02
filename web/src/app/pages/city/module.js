@@ -12,7 +12,8 @@
     }
 
     angular.module('cc.page.city', [
-        'ui.router'
+        'ui.router',
+        'ui.bootstrap'
     ])
     .config(StateConfig);
 
