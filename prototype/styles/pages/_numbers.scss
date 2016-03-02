@@ -1,0 +1,22 @@
+#numbers {
+    background-color: $color-numbers-background;
+    padding-bottom: 0;
+}
+
+.container-lines {
+    margin-top: 20px;
+    @media (min-width: $screen-sm-min) {
+        border-top: 1px solid #c2c2c2;
+    }
+}
+
+.col-lines {
+    padding-top: 20px;
+    padding-bottom: 5rem;
+}
+
+.col-lines:not(:last-child) {
+    @media (min-width: $screen-sm-min) {
+        border-right: 1px solid #c2c2c2;
+    }
+}
