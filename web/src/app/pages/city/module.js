@@ -13,7 +13,7 @@
 
     angular.module('cc.page.city', [
         'ui.router',
-        'ui.bootstrap'
+        'cc.city.switcher'
     ])
     .config(StateConfig);
 
