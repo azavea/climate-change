@@ -46,9 +46,14 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <h2 class="heading-label">Charts &amp; Things</h2>
-                <p class="h2">A look at the numbers</p>
-                <img src="https://placeholdit.imgix.net/~text?txtsize=33&txt=750%C3%97350&w=1250&h=350" alt="">
+                <h2 class="heading-label">A Look at the Numbers</h2>
+                <p class="h2">Average Monthly Temperatures</p>
+                <canvas class="chart-large"
+                        cc-chart-monthly-temp
+                        data="cpc.indicators"
+                        scenario="rcp45"
+                        options="cpc.tempChartOptions">
+                </canvas>
             </div>
         </div>
     </div>
@@ -56,16 +61,25 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-4 col-lines">
-                    <img src="https://placeholdit.imgix.net/~text?txtsize=33&txt=750%C3%97350&w=750&h=350" alt="">
-                    +29°F
+                    <cc-yearly-indicator data="cpc.indicators"
+                                         scenario="rcp45"
+                                         indicator="yearly_consecutive_dry_days"
+                                         label="Max Consecutive Dry Days">
+                    </cc-yearly-indicator>
                 </div>
                 <div class="col-sm-4 col-lines">
-                    <img src="https://placeholdit.imgix.net/~text?txtsize=33&txt=750%C3%97350&w=750&h=350" alt="">
-                    Graph
+                    <cc-yearly-indicator data="cpc.indicators"
+                                         scenario="rcp45"
+                                         indicator="yearly_dry_periods"
+                                         label="Dry Periods">
+                    </cc-yearly-indicator>
                 </div>
                 <div class="col-sm-4 col-lines">
-                    <img src="https://placeholdit.imgix.net/~text?txtsize=33&txt=750%C3%97350&w=750&h=350" alt="">
-                    Graph
+                    <cc-yearly-indicator data="cpc.indicators"
+                                         scenario="rcp45"
+                                         indicator="yearly_frost_days"
+                                         label="Frost Days">
+                    </cc-yearly-indicator>
                 </div>
             </div>
         </div>

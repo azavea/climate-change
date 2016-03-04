@@ -9,6 +9,7 @@
         initialize();
 
         function initialize() {
+            vm.tempChartOptions = {};
             vm.cities = City.list();
 
             findCity().then(function(city) {
