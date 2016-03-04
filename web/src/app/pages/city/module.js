@@ -17,6 +17,7 @@
         'cc.geolocation',
         'cc.city.charts',
         'cc.city.map',
+        'cc.city.ourdata',
         'cc.city.switcher'
     ])
     .config(StateConfig);

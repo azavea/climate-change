@@ -4,13 +4,14 @@
     var NEAREST_KEY = 'nearest';
 
 /** @ngInject */
-    function CityPageController($log, $q, $state, $stateParams, City, IPGeolocation) {
+    function CityPageController($log, $q, $state, $stateParams, City, IPGeolocation, OurDataConfig) {
         var vm = this;
         initialize();
 
         function initialize() {
             vm.tempChartOptions = {};
             vm.cities = City.list();
+            vm.ourdata = OurDataConfig;
 
             findCity().then(function(city) {
                 vm.city = city;
