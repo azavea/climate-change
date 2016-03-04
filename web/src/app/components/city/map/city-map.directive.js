@@ -6,7 +6,7 @@
         var svg;
         var width, height;
         var scale = 1000;
-        var γ = 23.5;
+        var gamma = 23.5;
         var numberFormatter = d3.format(',.0f');
         var graticule, radius;
 
@@ -54,7 +54,7 @@
 
             svg.selectAll("path").remove();
             var rotation = _.map(center.geometry.coordinates, function (v) { return v * -1; });
-            rotation.push(γ);
+            rotation.push(gamma);
 
             var projection = d3.geo.orthographic()
               .translate([width / 2, height / 2])
