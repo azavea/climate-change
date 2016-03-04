@@ -11,11 +11,13 @@
         function initialize() {
             vm.cities = City.list();
 
-            findCity().then(function (city) {
+            findCity().then(function(city) {
                 vm.city = city;
-            }).catch(function () {
-                $state.go('city', { cityId: NEAREST_KEY });
-            });
+                return loadIndicators(city);
+            }).then(function (indicators) {
+                vm.indicators = indicators;
+                $log.debug(indicators);
+            }).catch(onLoadError);
         }
 
         function findCity() {
@@ -32,9 +34,23 @@
             if (requestedCity) {
                 dfd.resolve(requestedCity);
             } else {
-                dfd.reject('Unable to set city');
+                dfd.reject({ message: 'Could not find requested city in list'});
             }
             return dfd.promise;
+        }
+
+        function loadIndicators(city) {
+            return City.indicators(city.properties.name, city.properties.admin);
+        }
+
+        function onLoadError(error) {
+            // An http request error
+            if (error && error.status) {
+                vm.error = 'Unable to load indicator data';
+                $log.error(error);
+            } else {
+                $state.go('city', { cityId: NEAREST_KEY });
+            }
         }
     }
 
