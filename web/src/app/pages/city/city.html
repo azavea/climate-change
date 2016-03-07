@@ -32,15 +32,15 @@
         <div class="row">
             <div class="col-sm-4 ding">
                 <h3 class="h2 color-primary">Today</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda laborum nisi tempora similique <span class="color-primary">Wilmington</span> corporis porro sed, non esse repellat.</p>
+                <p>Over the next 100 years, the climate of <span class="color-primary">{{ ::cpc.city.properties.name }}</span> will change dramatically.</p>
             </div>
             <div class="col-sm-4 ding">
                 <h3 class="h2 color-secondary">2050</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda laborum nisi tempora similique quisquam corporis <span class="color-secondary">Charleston, SC</span>, non esse repellat.</p>
+                <p>By 2050, {{ ::cpc.city.properties.name }} will feel more like today's <span class="color-secondary">{{::cpc.feelsLike['2050'].name }}</span>.</p>
             </div>
             <div class="col-sm-4 ding">
-                <h3 class="h2 color-tertiary">2100</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda laborum nisi tempora similique quisquam <span class="color-tertiary">Montgomery, AL</span> sed, non esse repellat.</p>
+                <h3 class="h2 color-tertiary">2099</h3>
+                <p>By 2099, {{ ::cpc.city.properties.name }} will feel more like today's <span class="color-tertiary">{{ ::cpc.feelsLike['2099'].name }}</span>.</p>
             </div>
         </div>
     </div>
