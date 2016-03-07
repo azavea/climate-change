@@ -1,6 +1,32 @@
 #numbers {
     background-color: $color-numbers-background;
     padding-bottom: 0;
+
+    .chart-large {
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 750px;
+        height: 300px;
+        display: block;
+    }
+
+
+    .legend-item {
+        line-height: 18px;
+        display: inline-block;
+        margin: 0 1rem;
+
+        .legend-box {
+            display: inline-block;
+            vertical-align: middle;
+            height: 12px;
+            width: 12px;
+            margin-right: 4px;
+            margin-bottom: 2px;
+        }
+    }
 }
 
 .container-lines {

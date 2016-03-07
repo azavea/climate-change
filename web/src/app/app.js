@@ -12,8 +12,13 @@
   }
 
   /** @ngInject */
+  function ChartConfig() {
+    //Chart.defaults.global.responsive = true;
+  }
+
+  /** @ngInject */
   function RouterConfig($urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/city/nearest');
   }
 
   angular
@@ -28,6 +33,7 @@
     ])
     .config(LogConfig)
     .config(RouterConfig)
+    .config(ChartConfig)
     .run(run);
 
 })();

@@ -7,8 +7,15 @@
         initialize();
 
         function initialize() {
-            vm.cities = cities;
-            $log.debug(cities);
+            vm.cities = _(cities.features)
+              .sortBy(function (c) { return c.properties.name; })
+              .groupBy(function (c) { return c.properties.continent; })
+              .value();
+            vm.onCityClicked = onCityClicked;
+        }
+
+        function onCityClicked(city) {
+            vm.$close(city);
         }
     }
 

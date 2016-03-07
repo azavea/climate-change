@@ -1,5 +1,6 @@
 <div class="header">
-    <div class="header-left" cc-city-switcher>
+    <div class="header-left">
+        <cc-city-switcher cities="cpc.cities"></cc-city-switcher>
     </div>
     <div class="header-center">Climate Change Weather Forecast</div>
     <div class="header-right">About</div>
@@ -10,7 +11,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <h1 class="color-primary">Wilmington, DE</h1>
+                <h1 class="color-primary">{{ ::cpc.city.properties.name }}, {{ ::cpc.city.properties.adm0_a3 }}</h1>
             </div>
         </div>
     </div>
@@ -18,7 +19,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <svg width="600" height="400" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" style="background-color: rgb(240, 240, 240)"><circle cx="300" cy="300" r="100" style="fill: rgb(34, 53, 55)"></circle></svg>
+                <cc-city-map class="city-map" width="600" height="400" cities="cpc.cities" center="cpc.city"></cc-city-map>
             </div>
         </div>
     </div>
@@ -45,9 +46,22 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <h2 class="heading-label">Charts &amp; Things</h2>
-                <p class="h2">A look at the numbers</p>
-                <img src="https://placeholdit.imgix.net/~text?txtsize=33&txt=750%C3%97350&w=1250&h=350" alt="">
+                <h2 class="heading-label">A Look at the Numbers</h2>
+                <p class="h2">Average Monthly Temperatures</p>
+                <canvas class="chart-large"
+                        cc-chart-monthly-temp
+                        data="cpc.indicators"
+                        scenario="rcp45"
+                        options="cpc.tempChartOptions">
+                </canvas>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <span class="heading-label">Average Monthly Temperature (&deg;C):</span>
+                <div class="legend-item color-primary"><span class="legend-box bg-color-primary"></span>2010</div>
+                <div class="legend-item color-secondary"><span class="legend-box bg-color-secondary"></span>2050</div>
+                <div class="legend-item color-tertiary"><span class="legend-box bg-color-tertiary"></span>2099</div>
             </div>
         </div>
     </div>
@@ -55,16 +69,25 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-4 col-lines">
-                    <img src="https://placeholdit.imgix.net/~text?txtsize=33&txt=750%C3%97350&w=750&h=350" alt="">
-                    +29°F
+                    <cc-yearly-indicator data="cpc.indicators"
+                                         scenario="rcp45"
+                                         indicator="yearly_consecutive_dry_days"
+                                         label="Max Consecutive Dry Days">
+                    </cc-yearly-indicator>
                 </div>
                 <div class="col-sm-4 col-lines">
-                    <img src="https://placeholdit.imgix.net/~text?txtsize=33&txt=750%C3%97350&w=750&h=350" alt="">
-                    Graph
+                    <cc-yearly-indicator data="cpc.indicators"
+                                         scenario="rcp45"
+                                         indicator="yearly_dry_periods"
+                                         label="Dry Periods">
+                    </cc-yearly-indicator>
                 </div>
                 <div class="col-sm-4 col-lines">
-                    <img src="https://placeholdit.imgix.net/~text?txtsize=33&txt=750%C3%97350&w=750&h=350" alt="">
-                    Graph
+                    <cc-yearly-indicator data="cpc.indicators"
+                                         scenario="rcp45"
+                                         indicator="yearly_frost_days"
+                                         label="Frost Days">
+                    </cc-yearly-indicator>
                 </div>
             </div>
         </div>
@@ -81,52 +104,7 @@
         </div>
         <div class="examples">
             <div class="row">
-                <div class="col-sm-6">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <img src="http://placehold.it/350x350">
-                        </div>
-                        <div class="col-sm-8">
-                            <h3>Real Estate</h3>
-                            <p>Your client is about to make a major investment in a location—show them what that location will be like for the duration of their investment.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <img src="http://placehold.it/350x350">
-                        </div>
-                        <div class="col-sm-8">
-                            <h3>Real Estate</h3>
-                            <p>Your client is about to make a major investment in a location—show them what that location will be like for the duration of their investment.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <img src="http://placehold.it/350x350">
-                        </div>
-                        <div class="col-sm-8">
-                            <h3>Real Estate</h3>
-                            <p>Your client is about to make a major investment in a location—show them what that location will be like for the duration of their investment.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <img src="http://placehold.it/350x350">
-                        </div>
-                        <div class="col-sm-8">
-                            <h3>Real Estate</h3>
-                            <p>Your client is about to make a major investment in a location—show them what that location will be like for the duration of their investment.</p>
-                        </div>
-                    </div>
-                </div>
+                <cc-our-data config="card" ng-repeat="card in cpc.ourdata"></cc-our-data>
             </div>
         </div>
     </div>

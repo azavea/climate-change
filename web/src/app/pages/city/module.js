@@ -4,15 +4,20 @@
     /** @ngInject */
     function StateConfig($stateProvider) {
         $stateProvider.state('city', {
-            url: '/',
+            url: '/city/:cityId',
             templateUrl: 'app/pages/city/city.html',
-            controller: 'CityController',
-            controllerAs: 'city'
+            controller: 'CityPageController',
+            controllerAs: 'cpc'
         });
     }
 
     angular.module('cc.page.city', [
         'ui.router',
+        'cc.api',
+        'cc.geolocation',
+        'cc.city.charts',
+        'cc.city.map',
+        'cc.city.ourdata',
         'cc.city.switcher'
     ])
     .config(StateConfig);

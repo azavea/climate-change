@@ -2,20 +2,31 @@
     'use strict';
 
     /** @ngInject */
-    function City($http, CityList) {
+    function City($http, CityList, strFormat) {
+
+        var INDICATOR_URL_TEMPLATE = 'https://s3.amazonaws.com/nex-climate-indicators/{0}--{1}.json';
 
         var module = {
-            get: get,
-            list: list
+            indicators: indicators,
+            list: list,
+            nearest: nearest
         };
         return module;
 
-        function get() {
-
+        function indicators(city, admin) {
+            var url = strFormat(INDICATOR_URL_TEMPLATE,
+                                [city.replace(/ /g, '-'), admin.replace(/ /g, '-')]);
+            return $http.get(url, { cache: true }).then(function (response) {
+                return response.data;
+            });
         }
 
         function list() {
             return CityList;
+        }
+
+        function nearest(point) {
+            return turf.nearest(point, list());
         }
     }
 

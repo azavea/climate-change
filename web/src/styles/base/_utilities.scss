@@ -18,5 +18,17 @@ img, svg {
     font-weight: normal;
 }
 
+.bg-color-primary {
+    background-color: $color-primary;
+}
+
+.bg-color-secondary {
+    background-color: $color-secondary;
+}
+
+.bg-color-tertiary {
+    background-color: $color-tertiary;
+}
+
 // UI Bootstrap no cursor for link elements fix
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
