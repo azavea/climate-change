@@ -18,6 +18,13 @@
     fill: #D4C4A1;
   }
 
+  .feelslike {
+    stroke: #fff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    fill: none;
+  }
+
   .boundary {
     fill-opacity: 0;
     stroke: #E38A62;
@@ -27,6 +34,11 @@
     fill: #F24F22;
     fill-opacity: .6;
     stroke: #8A422D;
+  }
+
+  .arrowhead {
+    stroke: #fff;
+    fill: #fff;
   }
 
   .symbol :hover {

@@ -2,12 +2,13 @@
     'use strict';
 
     /** @ngInject */
-    function City($http, CityList, strFormat) {
+    function City($http, $q, CityList, FeelsLikeStub, strFormat) {
 
         var INDICATOR_URL_TEMPLATE = 'https://s3.amazonaws.com/nex-climate-indicators/{0}--{1}.json';
 
         var module = {
             indicators: indicators,
+            feelslike: feelslike,
             list: list,
             nearest: nearest
         };
@@ -19,6 +20,10 @@
             return $http.get(url, { cache: true }).then(function (response) {
                 return response.data;
             });
+        }
+
+        function feelslike(city, admin) {
+            return $q.resolve(FeelsLikeStub);
         }
 
         function list() {
