@@ -2,7 +2,7 @@
     'use strict';
 
     /** @ngInject */
-    function MonthlyTempChartController($element, $log, $scope, Units) {
+    function MonthlyTempChartController($element, $log, $scope, Color, Units) {
 
         var CHART_DEFAULTS = {
             scaleStepWidth: 10,
@@ -60,7 +60,7 @@
             }
             var avg_max_temp_data = indicators.monthly_average_max_temp;
             var datasets = _.map(avg_max_temp_data, function (yearData, year) {
-                var color = colorForYear(year);
+                var color = Color.forYear(year);
                 return {
                     label: 'Avg Monthly Max Temp (' + year + ')',
                     strokeColor: color,
@@ -79,7 +79,7 @@
 
             var avg_min_temp_data = indicators.monthly_average_min_temp;
             var minDatasets = _.map(avg_min_temp_data, function (yearData, year) {
-                var color = colorForYear(year);
+                var color = Color.forYear(year);
                 return {
                     label: 'Avg Monthly Min Temp (' + year + ')',
                     strokeColor: color,
@@ -96,19 +96,6 @@
             });
             minDatasets.reverse();
             return datasets.concat(minDatasets);
-        }
-
-        function colorForYear(year) {
-            var yearInt = parseInt(year, 10);
-            if (yearInt >= 2095) {
-                return '#E1354F';
-            } else if (yearInt >= 2045) {
-                return '#FE6C23';
-            } else if (yearInt >= 2000) {
-                return '#1A9DEC';
-            } else {
-                return '#666';
-            }
         }
 
         function convertToUnits(value, unit) {
