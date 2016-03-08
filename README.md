@@ -22,3 +22,22 @@ Gulp tasks:
 - `$ gulp test:auto` to run your unit tests with Karma in watch mode
 - `$ gulp protractor` to launch your e2e tests with Protractor
 - `$ gulp protractor:dist` to launch your e2e tests with Protractor on the dist files
+
+
+# Aggregate data
+
+If you do not have data downloaded, have `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in your
+environment.
+
+In the `climate-change/indicators` directory, run:
+
+```bash
+python -m indicators.aggregate DATADIR OUTDIR
+```
+
+`DATADIR` is the directory with json files from the nex2json output process. If the files are
+unavailable locally they will be downloaded from S3.
+
+`OUTDIR` is the dir you would like the city json files written to.
+
+
