@@ -68,6 +68,7 @@ def aggregate_into_cities(data):
         city = k[2]
         if city not in result:
             result[city] = OrderedDict()
+            result[city]['city_name'] = city  # embed city name in result
         hierarchy = k[0:2] + k[3:]  # [rcp and indicator name] + [year, month, etc]
         leaf = result[city]
         for key in hierarchy[:-1]:
