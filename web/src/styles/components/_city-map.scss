@@ -1,6 +1,11 @@
 .city-map {
+
+  svg {
+    border: 3px solid #B3B3B3;
+  }
+
   circle {
-    fill: none;
+    fill: #fff;
     stroke: #223537;
     stroke-opacity: .5;
   }
@@ -11,38 +16,46 @@
 
   .graticule {
     fill: none;
-    stroke: #444;
+    stroke: #B3B3B3;
   }
 
   .land {
-    fill: #D4C4A1;
+    fill: #E0E0E0;
   }
 
   .feelslike {
-    stroke: #fff;
+    stroke: #000;
     stroke-width: 2;
+    stroke-dasharray: 5;
     stroke-linecap: round;
     fill: none;
   }
 
+  .feelslike-dot {
+    fill: #fff;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
   .boundary {
     fill-opacity: 0;
-    stroke: #E38A62;
+    stroke: #B3B3B3;
   }
 
   .symbol {
-    fill: #F24F22;
-    fill-opacity: .6;
-    stroke: #8A422D;
+    fill: #B3B3B3;
+    stroke: #B3B3B3;
+
+    &:hover {
+      stroke: #000;
+    }
   }
 
   .arrowhead {
-    stroke: #fff;
-    fill: #fff;
-  }
-
-  .symbol :hover {
     stroke: #000;
+    fill: #000;
   }
 
   .legend circle {

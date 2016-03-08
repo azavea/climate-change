@@ -2,13 +2,13 @@
     'use strict';
 
     /** @ngInject */
-    function ccCityMap($log, WorldBorders) {
+    function ccCityMap($log, Color, WorldBorders) {
         var svg, defs;
         var arrowhead;
         var width, height;
         var scale = 500;
         var gamma = 23.5;
-        var projection, graticule, radius;
+        var projection, graticule;
 
         var module = {
             restrict: 'EA',
@@ -52,12 +52,7 @@
             var fill = svg.append("circle")
               .attr("cx", width / 2)
               .attr("cy", height / 2)
-              .attr("r", width)
-              .style("fill", "#223537");
-
-            radius = d3.scale.sqrt()
-              .domain([0, 1e8])
-              .range([0, 50]);
+              .attr("r", width);
 
             projection = d3.geo.orthographic()
               .translate([width / 2, height / 2])
@@ -83,9 +78,9 @@
 
             setCenter(center.geometry.coordinates);
 
-            var path = d3.geo.path().projection(projection);
-            // Use a different path so we don't call into the symbol data on draw
-            var greatArcPath = d3.geo.path().projection(projection);
+            var path = d3.geo.path().projection(projection).pointRadius(3);
+            // Use a different path for feelsLike so we can keep the pointRadius constant
+            var feelsLikePath = d3.geo.path().projection(projection).pointRadius(5);
 
             svg.append("path")
               .datum(graticule)
@@ -104,36 +99,45 @@
 
             if (cities) {
               svg.selectAll(".symbol")
-                  .data(cities.features.sort(function(a, b) { return b.properties.pop2010 - a.properties.pop2010; }))
+                  .data(cities.features)
                 .enter().append("path")
                   .attr("class", "overlay symbol")
-                  .attr("d", path.pointRadius(function(d) {
-                    return radius(d.properties.pop2010 * 1000);
-                  }));
+                  .attr("d", path);
             }
 
             if (feelslike) {
-              var feelsLike = _(feelslike)
-                .toPairs()
-                .sortBy(function (v) { return v[0]; })
-                .value();
-              var coords = _.reduce(feelsLike, function (memo, f) {
-                memo.push(f[1].geometry.coordinates);
-                return memo;
-              }, [center.geometry.coordinates]);
-              for (var i = 0; i < coords.length - 1; i++) {
-                var a = coords[i];
-                var b = coords[i+1];
-                var interpolator = d3.geo.interpolate(a, b);
-                var linestring = {
-                  "type": "LineString",
-                  "coordinates": [interpolator(0.1), interpolator(0.9)]
-                };
-                svg.append("path")
-                  .datum(linestring)
-                  .attr("class", "overlay feelslike")
-                  .attr("d", greatArcPath)
-                  .attr("marker-end", "url(#arrowhead)");
+                center.properties.feelsLikeYear = 2010;
+                var features = [center].concat(_(feelslike)
+                  .toPairs()
+                  .sortBy(function (v) { return v[0]; })
+                  .map(function (v) {
+                    v[1].properties.feelsLikeYear = v[0];
+                    return v[1];
+                  })
+                  .value());
+                svg.selectAll(".feelslike-dot")
+                    .data(features)
+                  .enter().append("path")
+                    .attr("class", "overlay feelslike-dot")
+                    .attr("d", feelsLikePath)
+                    .attr("style", function (d) {
+                      return 'fill: ' + Color.forYear(d.properties.feelsLikeYear);
+                    });
+
+                for (var i = 0; i < features.length - 1; i++) {
+                    var a = features[i];
+                    var b = features[i+1];
+
+                    var interpolator = d3.geo.interpolate(a.geometry.coordinates, b.geometry.coordinates);
+                    var linestring = {
+                      "type": "LineString",
+                      "coordinates": [interpolator(0.1), interpolator(0.85)]
+                    };
+                    svg.append("path")
+                      .datum(linestring)
+                      .attr("class", "overlay feelslike")
+                      .attr("d", feelsLikePath)
+                      .attr("marker-end", "url(#arrowhead)");
                 }
             }
         }
