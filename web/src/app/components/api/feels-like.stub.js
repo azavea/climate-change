@@ -5,7 +5,7 @@
         2050: {
             type: "Feature",
             properties: {
-                name: 'Charlotte',
+                name: 'Atlanta',
                 admin: 'United States of America',
                 adm0_a3: 'USA'
             },

@@ -4,7 +4,6 @@
     /** @ngInject */
     function ccCityMap($log, Color, WorldBorders) {
         var svg, defs;
-        var arrowhead;
         var width, height;
         var scale = 500;
         var gamma = 23.5;
@@ -12,10 +11,10 @@
 
         var module = {
             restrict: 'EA',
-            template: '',
+            templateUrl: 'app/components/city/map/city-map.html',
             scope: {
                 cities: '=',
-                center: '=',
+                city: '=',
                 feelsLike: '=',
                 width: '=',
                 height: '='
@@ -27,29 +26,14 @@
         function link(scope, element, attrs) {
             width = parseInt(attrs.width, 10) || element.width();
             height = parseInt(attrs.height, 10) || element.height();
-            svg = d3.select(element[0]).append('svg')
+            svg = d3.select('.city-map svg')
               .attr('width', width)
               .attr('height', height);
             element.css({ width: width, height: height });
 
-            defs = svg.append("defs");
-            arrowhead = defs.append("marker")
-              .attr({
-                "id": "arrowhead",
-                "viewBox": "0 -5 10 10",
-                "refX": 5,
-                "refY": 0,
-                "markerWidth": 4,
-                "markerHeight": 4,
-                "orient": "auto"
-              })
-              .append("path")
-                .attr("d", "M 0 -5 L 10 0 L 0 5")
-                .attr("class", "arrowhead");
-
             graticule = d3.geo.graticule();
 
-            var fill = svg.append("circle")
+            svg.append("circle")
               .attr("cx", width / 2)
               .attr("cy", height / 2)
               .attr("r", width);
@@ -60,23 +44,39 @@
               .clipAngle(90)
               .precision(0.6);
 
-            scope.$watchGroup(['cities', 'center', 'feelsLike'], drawGlobe);
+            scope.$watchGroup(['cities', 'city', 'feelsLike'], drawGlobe);
         }
 
         function drawGlobe(data) {
             var cities = data[0];
-            var center = data[1];
+            var city = data[1];
             var feelslike = data[2];
+            var features = [];
 
-            if (!center) { return; }
+
+            if (!city) { return; }
 
             svg.selectAll("path.basemap").remove();
             svg.selectAll("path.overlay").remove();
 
-            var rotation = _.map(center.geometry.coordinates, function (v) { return v * -1; });
-            rotation.push(gamma);
+            // Generate some additional derived data
+            city.properties.feelsLikeYear = 2010;
+            var mapCenter = city;
+            if (feelslike) {
+                features = [city].concat(_(feelslike)
+                  .toPairs()
+                  .sortBy(function (v) { return v[0]; })
+                  .map(function (v) {
+                    v[1].properties.feelsLikeYear = v[0];
+                    return v[1];
+                  })
+                  .value());
+                mapCenter = turf.center(turf.featurecollection(features));
+            }
 
-            setCenter(center.geometry.coordinates);
+            // TODO: Figure out how to scale/translate the viewport to the extent of the
+            // feelslike feature once we know what that looks like
+            setCenter(mapCenter.geometry.coordinates);
 
             var path = d3.geo.path().projection(projection).pointRadius(3);
             // Use a different path for feelsLike so we can keep the pointRadius constant
@@ -106,15 +106,6 @@
             }
 
             if (feelslike) {
-                center.properties.feelsLikeYear = 2010;
-                var features = [center].concat(_(feelslike)
-                  .toPairs()
-                  .sortBy(function (v) { return v[0]; })
-                  .map(function (v) {
-                    v[1].properties.feelsLikeYear = v[0];
-                    return v[1];
-                  })
-                  .value());
                 svg.selectAll(".feelslike-dot")
                     .data(features)
                   .enter().append("path")
@@ -131,7 +122,7 @@
                     var interpolator = d3.geo.interpolate(a.geometry.coordinates, b.geometry.coordinates);
                     var linestring = {
                       "type": "LineString",
-                      "coordinates": [interpolator(0.1), interpolator(0.85)]
+                      "coordinates": [interpolator(0.2), interpolator(0.8)]
                     };
                     svg.append("path")
                       .datum(linestring)
