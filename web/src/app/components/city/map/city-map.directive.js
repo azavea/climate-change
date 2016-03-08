@@ -2,20 +2,20 @@
     'use strict';
 
     /** @ngInject */
-    function ccCityMap(WorldBorders) {
-        var svg;
+    function ccCityMap($log, Color, WorldBorders) {
+        var svg, defs;
         var width, height;
-        var scale = 1000;
+        var scale = 500;
         var gamma = 23.5;
-        var numberFormatter = d3.format(',.0f');
-        var graticule, radius;
+        var projection, graticule;
 
         var module = {
             restrict: 'EA',
-            template: '',
+            templateUrl: 'app/components/city/map/city-map.html',
             scope: {
                 cities: '=',
-                center: '=',
+                city: '=',
+                feelsLike: '=',
                 width: '=',
                 height: '='
             },
@@ -26,72 +26,119 @@
         function link(scope, element, attrs) {
             width = parseInt(attrs.width, 10) || element.width();
             height = parseInt(attrs.height, 10) || element.height();
-            svg = d3.select(element[0]).append('svg')
+            svg = d3.select('.city-map svg')
               .attr('width', width)
               .attr('height', height);
             element.css({ width: width, height: height });
 
             graticule = d3.geo.graticule();
 
-            var fill = svg.append("circle")
+            svg.append("circle")
               .attr("cx", width / 2)
               .attr("cy", height / 2)
-              .attr("r", width)
-              .style("fill", "#223537");
+              .attr("r", width);
 
-            radius = d3.scale.sqrt()
-              .domain([0, 1e8])
-              .range([0, 50]);
+            projection = d3.geo.orthographic()
+              .translate([width / 2, height / 2])
+              .scale(scale)
+              .clipAngle(90)
+              .precision(0.6);
 
-            scope.$watchGroup(['cities', 'center'], drawGlobe);
+            scope.$watchGroup(['cities', 'city', 'feelsLike'], drawGlobe);
         }
 
         function drawGlobe(data) {
             var cities = data[0];
-            var center = data[1];
+            var city = data[1];
+            var feelslike = data[2];
+            var features = [];
 
-            if (!(cities && center)) { return; }
 
-            svg.selectAll("path").remove();
-            var rotation = _.map(center.geometry.coordinates, function (v) { return v * -1; });
-            rotation.push(gamma);
+            if (!city) { return; }
 
-            var projection = d3.geo.orthographic()
-              .translate([width / 2, height / 2])
-              .scale(scale)
-              .rotate(rotation)
-              .clipAngle(90)
-              .precision(0.6);
+            svg.selectAll("path.basemap").remove();
+            svg.selectAll("path.overlay").remove();
 
-            var path = d3.geo.path()
-              .projection(projection);
+            // Generate some additional derived data
+            city.properties.feelsLikeYear = 2010;
+            var mapCenter = city;
+            if (feelslike) {
+                features = [city].concat(_(feelslike)
+                  .toPairs()
+                  .sortBy(function (v) { return v[0]; })
+                  .map(function (v) {
+                    v[1].properties.feelsLikeYear = v[0];
+                    return v[1];
+                  })
+                  .value());
+                mapCenter = turf.center(turf.featurecollection(features));
+            }
+
+            // TODO: Figure out how to scale/translate the viewport to the extent of the
+            // feelslike feature once we know what that looks like
+            setCenter(mapCenter.geometry.coordinates);
+
+            var path = d3.geo.path().projection(projection).pointRadius(3);
+            // Use a different path for feelsLike so we can keep the pointRadius constant
+            var feelsLikePath = d3.geo.path().projection(projection).pointRadius(5);
 
             svg.append("path")
               .datum(graticule)
-              .attr("class", "graticule")
+              .attr("class", "basemap graticule")
               .attr("d", path);
 
             svg.append("path")
               .datum(topojson.feature(WorldBorders, WorldBorders.objects.land))
-              .attr("class", "land")
+              .attr("class", "basemap land")
               .attr("d", path);
 
             svg.append("path")
               .datum(topojson.mesh(WorldBorders, WorldBorders.objects.countries, function(a, b) { return a !== b; }))
-              .attr("class", "boundary")
+              .attr("class", "basemap boundary")
               .attr("d", path);
 
-            if (!cities) { return; }
+            if (cities) {
+              svg.selectAll(".symbol")
+                  .data(cities.features)
+                .enter().append("path")
+                  .attr("class", "overlay symbol")
+                  .attr("d", path);
+            }
 
-            svg.selectAll(".symbol")
-                .data(cities.features.sort(function(a, b) { return b.properties.pop2010 - a.properties.pop2010; }))
-              .enter().append("path")
-                .attr("class", "symbol")
-                .attr("d", path.pointRadius(function(d) { return radius(d.properties.pop2010 * 1000); }))
-              .append("title")
-                .text(function(d) {
-                  return d.properties.nameascii + "\nPopulation 2010: " + (numberFormatter(d.properties.pop2010 * 1000));
-                });
+            if (feelslike) {
+                svg.selectAll(".feelslike-dot")
+                    .data(features)
+                  .enter().append("path")
+                    .attr("class", "overlay feelslike-dot")
+                    .attr("d", feelsLikePath)
+                    .attr("style", function (d) {
+                      return 'fill: ' + Color.forYear(d.properties.feelsLikeYear);
+                    });
+
+                for (var i = 0; i < features.length - 1; i++) {
+                    var a = features[i];
+                    var b = features[i+1];
+
+                    var interpolator = d3.geo.interpolate(a.geometry.coordinates, b.geometry.coordinates);
+                    var linestring = {
+                      "type": "LineString",
+                      "coordinates": [interpolator(0.2), interpolator(0.8)]
+                    };
+                    svg.append("path")
+                      .datum(linestring)
+                      .attr("class", "overlay feelslike")
+                      .attr("d", feelsLikePath)
+                      .attr("marker-end", "url(#arrowhead)");
+                }
+            }
+        }
+
+        function setCenter(center) {
+            if (!projection) { return; }
+
+            var rotation = _.map(center, function (v) { return v * -1; });
+            rotation.push(gamma);
+            projection.rotate(rotation);
         }
     }
 

@@ -11,14 +11,18 @@
         function initialize() {
             vm.tempChartOptions = {};
             vm.cities = City.list();
+            vm.cities.features.sort(function (a, b) {
+                return b.properties.pop2010 - a.properties.pop2010;
+            });
             vm.ourdata = OurDataConfig;
 
             findCity().then(function(city) {
                 vm.city = city;
                 return loadIndicators(city);
-            }).then(function (indicators) {
-                vm.indicators = indicators;
-                $log.debug(indicators);
+            }).then(function (cityData) {
+                vm.indicators = cityData[0];
+                vm.feelsLike = cityData[1];
+                $log.debug(vm.indicators, vm.feelsLike);
             }).catch(onLoadError);
         }
 
@@ -42,7 +46,10 @@
         }
 
         function loadIndicators(city) {
-            return City.indicators(city.properties.name, city.properties.admin);
+            return $q.all([
+                City.indicators(city.properties.name, city.properties.admin),
+                City.feelslike(city.properties.name, city.properties.admin)
+            ]);
         }
 
         function onLoadError(error) {
