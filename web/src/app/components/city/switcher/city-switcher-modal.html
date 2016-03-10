@@ -1,16 +1,32 @@
 <div class="modal-header">
     <button type="button" class="close" aria-label="Close" ng-click="csmc.$dismiss()"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title" id="myModalLabel">Switch Cities</h4>
+    <input type="text"
+           class="typeahead"
+           placeholder="Search for your city..."
+           ng-model="csmc.selectedCity"
+           uib-typeahead="city.properties.name for city in csmc.cities | filter:$viewValue | limitTo:10"
+           typeahead-min-length="2"
+           typeahead-editable="false"
+           typeahead-show-hint="true"
+           typeahead-on-select="csmc.onCityClicked($item)"
+           typeahead-template-url="city-switcher-modal-typeahead-item.html" />
 </div>
 <div class="modal-body">
     <div class="row">
-        <div class="col-sm-4" ng-repeat="(continent, group) in csmc.cities">
+        <div class="col-sm-3" ng-repeat="(continent, cities) in csmc.groupedCities">
             <h3>{{ ::continent }}</h3>
             <ul>
-                <li ng-repeat="c in group track by c.properties.cartodb_id">
+                <li ng-repeat="c in cities track by c.properties.cartodb_id">
                     <a ng-click="csmc.onCityClicked(c)">{{ ::c.properties.name }}</a>
                 </li>
             </ul>
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="city-switcher-modal-typeahead-item.html">
+    <a>
+        <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>, {{ match.model.properties.admin }}
+    </a>
+</script>

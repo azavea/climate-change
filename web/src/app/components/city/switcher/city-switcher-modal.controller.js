@@ -7,10 +7,12 @@
         initialize();
 
         function initialize() {
-            vm.cities = _(cities.features)
-              .sortBy(function (c) { return c.properties.name; })
+            vm.cities = cities.features;
+            vm.groupedCities = _(vm.cities)
               .groupBy(function (c) { return c.properties.continent; })
+              .mapValues(function (group) { return _.take(group, 10); })
               .value();
+
             vm.onCityClicked = onCityClicked;
         }
 

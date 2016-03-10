@@ -1,4 +1,11 @@
 .city-switcher-modal {
+
+    .modal-header {
+        .typeahead {
+            margin-top: 10px;
+        }
+    }
+
     .modal-body {
         height: 640px;
         overflow-y: scroll;
