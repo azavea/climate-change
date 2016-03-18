@@ -104,12 +104,24 @@
               .attr("class", "basemap boundary")
               .attr("d", path);
 
+            // Initialize tooltips
+            var tip = d3.tip()
+                .attr('class', 'd3-tip')
+                .offset([-10, 0])
+                .html(function(d){
+                    return d.properties.name;
+                });
+
+            svg.call(tip);
+
             if (cities) {
-              svg.selectAll(".symbol")
-                  .data(cities.features)
-                .enter().append("path")
-                  .attr("class", "overlay symbol")
-                  .attr("d", path);
+                svg.selectAll(".symbol")
+                    .data(cities.features)
+                    .enter().append("path")
+                    .attr("class", "overlay symbol")
+                    .attr("d", path)
+                    .on('mouseover', tip.show)
+                    .on('mouseout', tip.hide);
             }
 
             if (feelslike) {
@@ -120,7 +132,9 @@
                     .attr("d", feelsLikePath)
                     .attr("style", function (d) {
                       return 'fill: ' + Color.forYear(d.properties.feelsLikeYear);
-                    });
+                    })
+                    .on('mouseover', tip.show)
+                    .on('mouseout', tip.hide);
 
                 for (var i = 0; i < features.length - 1; i++) {
                     var a = features[i];
