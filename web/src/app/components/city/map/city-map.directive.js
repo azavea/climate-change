@@ -9,6 +9,13 @@
         var gamma = 23.5;
         var projection, graticule;
 
+        // Domain and range multipliers to use for scaling the map to the height and width
+        // of the view. Increasing domain value (x or y difference in pixels) maps to decreasing
+        // range (scale factor for the map).
+        var DOMAIN_MAX_FACTOR = 1.5;
+        var RANGE_MIN_FACTOR = 3;
+        var RANGE_MAX_FACTOR = 0.4;
+
         var module = {
             restrict: 'EA',
             templateUrl: 'app/components/city/map/city-map.html',
@@ -44,7 +51,8 @@
               .clipAngle(90)
               .precision(0.6);
 
-            scope.$watchGroup(['cities', 'city', 'feelsLike'], drawGlobe);
+            // Debounce to avoid flashing a different map before the feelsLike shows up
+            scope.$watchGroup(['cities', 'city', 'feelsLike'], _.debounce(drawGlobe, 100));
         }
 
         function drawGlobe(data) {
@@ -52,7 +60,6 @@
             var city = data[1];
             var feelslike = data[2];
             var features = [];
-
 
             if (!city) { return; }
 
@@ -62,6 +69,7 @@
             // Generate some additional derived data
             city.properties.feelsLikeYear = 2010;
             var mapCenter = city;
+            var mapExtent;
             if (feelslike) {
                 features = [city].concat(_(feelslike)
                   .toPairs()
@@ -72,11 +80,10 @@
                   })
                   .value());
                 mapCenter = turf.center(turf.featurecollection(features));
+                mapExtent = turf.extent(turf.featurecollection(features));
             }
 
-            // TODO: Figure out how to scale/translate the viewport to the extent of the
-            // feelslike feature once we know what that looks like
-            setCenter(mapCenter.geometry.coordinates);
+            centerAndZoom(mapCenter.geometry.coordinates, mapExtent);
 
             var path = d3.geo.path().projection(projection).pointRadius(3);
             // Use a different path for feelsLike so we can keep the pointRadius constant
@@ -133,12 +140,35 @@
             }
         }
 
-        function setCenter(center) {
+        /* Sets the map center to the given coordinates, and if extent is set, zooms to
+         * fit the extent.
+         *
+         * @param {Array} center  coordinates to center the map view on
+         * @param {Array} [extent]  bounding box as [west, south, east, north] to zoom to
+         */
+        function centerAndZoom(center, extent) {
             if (!projection) { return; }
 
             var rotation = _.map(center, function (v) { return v * -1; });
             rotation.push(gamma);
             projection.rotate(rotation);
+
+            if (extent) {
+                // zoom to extent. The basic idea is to figure out how big the extent is
+                // in X and Y as projected and scale based on the bigger one, but the actual
+                // factors used in the scalers were arrived at by trial and error.
+                var lowerLeft = projection([extent[0], extent[1]]);
+                var topRight = projection([extent[2], extent[3]]);
+                var domainMax = DOMAIN_MAX_FACTOR * projection.scale();
+                var xScale = d3.scale.linear().clamp(true)
+                  .domain([0, domainMax]).range([RANGE_MIN_FACTOR * width, RANGE_MAX_FACTOR * width]);
+                var yScale = d3.scale.linear().clamp(true)
+                  .domain([0, domainMax]).range([RANGE_MIN_FACTOR * height, RANGE_MAX_FACTOR * height]);
+                var xDiff = Math.abs(topRight[0] - lowerLeft[0]);
+                var yDiff = Math.abs(topRight[1] - lowerLeft[1]);
+                var scaleFactor = Math.round(Math.min(xScale(xDiff), yScale(yDiff)));
+                projection.scale(scaleFactor);
+            }
         }
     }
 
