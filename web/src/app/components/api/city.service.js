@@ -4,8 +4,8 @@
     /** @ngInject */
     function City($http, $q, CityList, FeelsLikeStub, strFormat) {
 
-        var INDICATOR_URL_TEMPLATE = 'https://s3.amazonaws.com/nex-climate-indicators/{0}--{1}.json';
-        var FUTURE_CITY_URL_TEMPLATE = 'https://s3.amazonaws.com/futurefeelslikeprojections/rcp85/{0}--{1}.json';
+        var INDICATOR_URL_TEMPLATE = 'https://s3.amazonaws.com/climate-projection-data/nex-climate-indicators/{0}--{1}.json';
+        var FUTURE_CITY_URL_TEMPLATE = 'https://s3.amazonaws.com/climate-projection-data/feels-like-city-projections/rcp85/{0}--{1}.json';
 
         var module = {
             indicators: indicators,
@@ -26,7 +26,7 @@
         function feelslike(city, admin) {
             // UI only accepts 1 scenario, default to rcp85
             var rcp85_url = strFormat(FUTURE_CITY_URL_TEMPLATE,
-                                [city.replace(/\s+/g, '+'), admin.replace(/\s+/g, '+')]);
+                                [city.replace(/\s+/g, '-'), admin.replace(/\s+/g, '-')]);
             return $http.get(rcp85_url).then(function (response) {
                 return response.data;
             });
