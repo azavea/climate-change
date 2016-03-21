@@ -49,49 +49,68 @@
 <section id="numbers">
     <div class="container">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-md-8">
                 <h2 class="heading-label">A Look at the Numbers</h2>
-                <p class="h2">Average Monthly Temperatures</p>
+                <p class="h2">Monthly Temperatures</p>
                 <canvas class="chart-large"
-                        cc-chart-monthly-temp
+                        cc-chart-monthly
+                        type="line"
                         data="cpc.indicators"
-                        scenario="rcp45"
-                        options="cpc.tempChartOptions">
+                        options="cpc.tempChartConfig">
                 </canvas>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <span class="heading-label">Average Monthly Temperature (&deg;C):</span>
-                <div class="legend-item color-primary"><span class="legend-box bg-color-primary"></span>2010</div>
-                <div class="legend-item color-secondary"><span class="legend-box bg-color-secondary"></span>2050</div>
-                <div class="legend-item color-tertiary"><span class="legend-box bg-color-tertiary"></span>2099</div>
-            </div>
-        </div>
-    </div>
-    <div class="container-lines">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4 col-lines">
-                    <cc-yearly-indicator data="cpc.indicators"
-                                         scenario="rcp45"
-                                         indicator="yearly_consecutive_dry_days"
-                                         label="Max Consecutive Dry Days">
-                    </cc-yearly-indicator>
+                <div>
+                    <span class="heading-label">Average Monthly Temperature (&deg;C):</span>
+                    <div class="legend-item color-primary">
+                        <span class="legend-box bg-color-primary"></span>2010
+                    </div>
+                    <div class="legend-item color-secondary">
+                        <span class="legend-box bg-color-secondary"></span>2050
+                    </div>
+                    <div class="legend-item color-tertiary">
+                        <span class="legend-box bg-color-tertiary"></span>2099
+                    </div>
                 </div>
-                <div class="col-sm-4 col-lines">
-                    <cc-yearly-indicator data="cpc.indicators"
-                                         scenario="rcp45"
-                                         indicator="yearly_dry_periods"
-                                         label="Dry Periods">
-                    </cc-yearly-indicator>
+
+                <p class="h2">Monthly Precipitation</p>
+                <canvas class="chart-large"
+                        cc-chart-monthly
+                        type="bar"
+                        data="cpc.indicators"
+                        options="cpc.precipChartConfig">
+                </canvas>
+                <div>
+                    <span class="heading-label">Total Monthly Precipitation (inches):</span>
+                    <div class="legend-item color-primary">
+                        <span class="legend-box bg-color-primary"></span>2010
+                    </div>
+                    <div class="legend-item color-secondary">
+                        <span class="legend-box bg-color-secondary"></span>2050
+                    </div>
+                    <div class="legend-item color-tertiary">
+                        <span class="legend-box bg-color-tertiary"></span>2099
+                    </div>
                 </div>
-                <div class="col-sm-4 col-lines">
-                    <cc-yearly-indicator data="cpc.indicators"
-                                         scenario="rcp45"
-                                         indicator="yearly_frost_days"
-                                         label="Frost Days">
-                    </cc-yearly-indicator>
+            </div>
+            <div class="col-md-4 col-lines">
+                <div class="chart-small"
+                    cc-yearly-indicator
+                    data="cpc.indicators"
+                    scenario="rcp45"
+                    indicator="yearly_consecutive_dry_days"
+                    label="Yearly Consecutive Dry Days">
+                </div>
+                <div class="chart-small"
+                    cc-yearly-indicator
+                    data="cpc.indicators"
+                    scenario="rcp45"
+                    indicator="yearly_dry_periods"
+                    label="Yearly Dry Periods">
+                </div>
+                <div class="chart-small"
+                    cc-yearly-indicator data="cpc.indicators"
+                    scenario="rcp45"
+                    indicator="yearly_frost_days"
+                    label="Yearly Frost Days">
                 </div>
             </div>
         </div>

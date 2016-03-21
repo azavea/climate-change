@@ -9,7 +9,39 @@
         initialize();
 
         function initialize() {
-            vm.tempChartOptions = {};
+            vm.tempChartConfig = {
+                scenario: 'rcp45',
+                chartOptions: {},
+                indicators: [
+                    {
+                        key: 'monthly_average_max_temp',
+                        label: 'Avg Monthly Max Temp'
+                    }, {
+                        key: 'monthly_average_min_temp',
+                        label: 'Avg Monthly Min Temp'
+                    },
+                ],
+                units: {
+                    type: 'temp',
+                    from: 'K',
+                    to: 'C',
+                }
+            };
+            vm.precipChartConfig = {
+                scenario: 'rcp45',
+                chartOptions: {},
+                indicators: [
+                    {
+                        key: 'monthly_total_precip',
+                        label: 'Total Monthly Precipitation'
+                    },
+                ],
+                units: {
+                    type: 'precip',
+                    from: 'kgPerSquareMeterPerMonth',
+                    to: 'inchesPerMonth',
+                }
+            };
             vm.cities = City.list();
             vm.cities.features.sort(function (a, b) {
                 return b.properties.pop2010 - a.properties.pop2010;
