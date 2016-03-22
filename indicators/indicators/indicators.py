@@ -25,41 +25,44 @@ from generators import yield_monthly_data, yield_yearly_data, yield_multivariabl
 from models import ModelVariable
 
 
+def average(values):
+    return float(sum(values)) / len(values)
+
 
 def monthly_total_precip(data, year, model):
-    """ monthly_total_precip """
+    """ monthly_total_precip
 
-    for city, month, values in yield_monthly_data(data, year, ModelVariable.PRECIP, model, default_value=0.0):
-        total = sum(values)
+    Converts from kg/m^2/s to kg/m^2/day and sums the daily amounts for the month.
+    """
+    for city, month, values in yield_monthly_data(data, year, ModelVariable.PRECIP, model,
+                                                  default_value=0.0):
+        total = sum([value * 86400 for value in values])
         yield ("monthly_total_precip", city, year, month, total)
 
 
 def monthly_average_max_temp(data, year, model):
     """ monthly_average_max_temp """
-
-    for city, month, values in yield_monthly_data(data, year, ModelVariable.TMAX, model, default_value=None):
+    for city, month, values in yield_monthly_data(data, year, ModelVariable.TMAX, model,
+                                                  default_value=None):
         clean_values = [v for v in values if v is not None]
-        avg = sum(clean_values) / len(clean_values)
-        yield ("monthly_average_max_temp", city, year, month, avg)
+        yield ("monthly_average_max_temp", city, year, month, average(clean_values))
 
 
 def monthly_average_min_temp(data, year, model):
     """ monthly_average_min_temp """
-
-    for city, month, values in yield_monthly_data(data, year, ModelVariable.TMIN, model, default_value=None):
+    for city, month, values in yield_monthly_data(data, year, ModelVariable.TMIN, model,
+                                                  default_value=None):
         clean_values = [v for v in values if v is not None]
-        avg = sum(clean_values) / len(clean_values)
-        yield ("monthly_average_min_temp", city, year, month, avg)
+        yield ("monthly_average_min_temp", city, year, month, average(clean_values))
 
 
 def monthly_min_temp(data, year, model):
     """ monthly_min_temp
 
     Find the lowest low in the given month
-
     """
-
-    for city, month, values in yield_monthly_data(data, year, ModelVariable.TMIN, model, default_value=sys.maxint):
+    for city, month, values in yield_monthly_data(data, year, ModelVariable.TMIN, model,
+                                                  default_value=sys.maxint):
         min_value = min(values)
         yield ("monthly_min_temp", city, year, month, min_value)
 
@@ -70,7 +73,8 @@ def monthly_max_temp(data, year, model):
     Find the highest high in the given month
 
     """
-    for city, month, values in yield_monthly_data(data, year, ModelVariable.TMAX, model, default_value=-1):
+    for city, month, values in yield_monthly_data(data, year, ModelVariable.TMAX, model,
+                                                  default_value=-1):
         max_value = max(values)
         yield ("monthly_max_temp", city, year, month, max_value)
 
@@ -111,7 +115,6 @@ def yearly_consecutive_dry_days(data, year, model):
     Find the longest streak of no days of rain in the year
 
     """
-
     for city, values in yield_yearly_data(data, year, ModelVariable.PRECIP, model, default_value=0):
         consecutive_days = 0
         longest_streak = 0
@@ -160,7 +163,8 @@ def yearly_growing_degree_days(data, year, model):
     variables = (ModelVariable.TMAX, ModelVariable.TMIN,)
     T_BASE = 283.15
     T_MAX_CAP = 303.15
-    for city, values in yield_multivariable_yearly_data(data, year, variables, model, default_value=None):
+    for city, values in yield_multivariable_yearly_data(data, year, variables, model,
+                                                        default_value=None):
         total_gdds = 0
         for t_max, t_min in values:
             if t_max is None or t_min is None:
