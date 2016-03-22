@@ -16,7 +16,6 @@
         initialize();
 
         function initialize() {
-            vm.dropdownCities = _.take(vm.cities.features, 10);
             vm.openModal = openModal;
         }
 
