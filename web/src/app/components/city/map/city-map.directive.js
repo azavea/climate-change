@@ -2,7 +2,7 @@
     'use strict';
 
     /** @ngInject */
-    function ccCityMap($log, Color, WorldBorders) {
+    function ccCityMap($log, $window, Color, WorldBorders) {
         var svg, defs;
         var width, height;
         var scale = 500;
@@ -36,6 +36,8 @@
 
             // Debounce to avoid flashing a different map before the feelsLike shows up
             scope.$watchGroup(['city', 'feelsLike'], drawGlobe);
+            $($window).on('resize', _.debounce(drawGlobe, 50));
+            scope.$on('$destroy', onScopeDestroy);
 
             function drawGlobe() {
                 var city = scope.city;
@@ -166,6 +168,10 @@
                 var scaleFactor = Math.round(Math.min(xScale(xDiff), yScale(yDiff)));
                 projection.scale(scaleFactor);
             }
+        }
+
+        function onScopeDestroy() {
+            $($window).off('resize');
         }
     }
 
