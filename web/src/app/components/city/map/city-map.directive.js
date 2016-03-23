@@ -95,7 +95,7 @@
         }
 
         /**
-         * Draw feels like text box into proper position based on index and the feature data
+         * Draw feels like text and pointer lines and dots into the container, using features
          */
         function drawFeelsLikeOverlay(container, features) {
 
@@ -111,7 +111,77 @@
                 });
             svg.call(tip);
 
-            // Draw feelslike dots
+            // Add text box with feels like text
+            svg.selectAll("g.text-box").remove();
+            var textBox = svg.append("g")
+              .attr("class", "text-box");
+
+            var textAnchorX = width / 8;
+            var textAnchorY = height / 5;   // start 1/5 down the page, and increment from there...
+            var yIncrement = 20;            // by this yIncrement
+            var textGroupPadding = 20;
+            var maxTextWidth = 0;
+            var arrowPadding = 10;
+            var cityTextAnchors = [];
+            var text = null;
+
+            // Add text for each feature, get max width of text as side effect
+            for (var i = 0; i < features.length; i++) {
+                var feature = features[i];
+
+                var preText = getPreText(i);
+                if (preText) {
+                    text = addTextNode(textBox, textAnchorX, textAnchorY, preText);
+                    textAnchorY += yIncrement;
+                    maxTextWidth = updateMaxTextWidth(text, maxTextWidth);
+                }
+
+                text = addTextNode(textBox, textAnchorX, textAnchorY, feature.properties.name)
+                  .attr('style', 'font-weight: bold; fill: ' + Color.forYear(feature.properties.feelsLikeYear));
+                maxTextWidth = updateMaxTextWidth(text, maxTextWidth);
+                cityTextAnchors.push([textAnchorX, textAnchorY]);
+
+                textAnchorY += yIncrement;
+                var postText = getPostText(i);
+                if (postText) {
+                    text = addTextNode(textBox, textAnchorX, textAnchorY, postText);
+                    textAnchorY += yIncrement;
+                    maxTextWidth = updateMaxTextWidth(text, maxTextWidth);
+                }
+
+                textAnchorY += textGroupPadding;
+            }
+
+            // now that we have max text width, loop em' again to draw the lines
+            var line = d3.svg.line()
+                .x(function (d) { return d[0]; })
+                .y(function (d) { return d[1]; })
+                .interpolate('linear');
+            for (i = 0; i < features.length; i++) {
+                var feature = features[i];
+                var x1 = cityTextAnchors[i][0] + maxTextWidth + arrowPadding;
+                var y1 = cityTextAnchors[i][1] - textGroupPadding / 3.0;
+
+                var coords = feature.geometry.type === 'Point' ?
+                    feature.geometry.coordinates : feature.geometry.coordinates[0];
+                var featureXY = projection(coords);
+                var x3 = featureXY[0] - arrowPadding;
+                var y3 = featureXY[1];
+                var isDown = y3 > y1 ? 1 : -1;
+                y3 = y3 - isDown * arrowPadding;
+
+                var x2 = x3 - (Math.abs(y3 - y1) - arrowPadding);
+                // Ensure midpoint isn't left of the left edge of arrow line
+                x2 = x1 > x2 ? x1 : x2;
+                var y2 = y1;
+
+                var lineData = [[x1, y1], [x2, y2], [x3, y3]];
+                svg.append('path')
+                  .attr('d', line(lineData))
+                  .attr('class', 'feels-like-pointer');
+            }
+
+            // Draw feelslike dots -- last so they show on top
             svg.selectAll(".feelslike-dot")
                 .data(features)
               .enter().append("path")
@@ -123,41 +193,18 @@
                 .on('mouseover', tip.show)
                 .on('mouseout', tip.hide);
 
-
-            // Add text box with feels like text
-            svg.selectAll("g.text-box").remove();
-            var textBox = svg.append("g")
-              .attr("class", "text-box");
-
-            var textAnchorX = width / 8;
-            var textAnchorY = height / 5;   // start 1/5 downt he page, and increment from there
-            var yIncrement = 20;
-            var textGroupPadding = 20;
-
-            // Add text and pointer arrows for each feature
-            for (var i = 0; i < features.length; i++) {
-                var feature = features[i];
-                var preText = getPreText(i);
-                if (preText) {
-                    addTextNode(textBox, textAnchorX, textAnchorY, preText);
-                    textAnchorY += yIncrement;
-                }
-                addTextNode(textBox, textAnchorX, textAnchorY, feature.properties.name)
-                  .attr('style', 'font-weight: bold; fill: ' + Color.forYear(feature.properties.feelsLikeYear));
-                textAnchorY += yIncrement;
-                var postText = getPostText(i);
-                if (postText) {
-                    addTextNode(textBox, textAnchorX, textAnchorY, postText);
-                    textAnchorY += yIncrement;
-                }
-                textAnchorY += textGroupPadding;
-            }
-
+            // Helper to append text node to container at x/y with given text
             function addTextNode(container, x, y, text) {
                 return container.append("text")
                   .attr('x', x)
                   .attr('y', y)
                   .text(text);
+            }
+
+            // Helpler to get width of node and return max of passed maxWidth and node width
+            function updateMaxTextWidth(node, maxWidth) {
+                var width = node.node().getBBox().width;
+                return width > maxWidth ? width : maxWidth;
             }
         }
 

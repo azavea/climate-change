@@ -59,8 +59,8 @@
   }
 
   .arrow {
-    stroke: #000;
-    fill: #000;
+    stroke: #8294AD;
+    fill: #8294AD;
   }
 
   .legend circle {
@@ -82,6 +82,13 @@
       font-family: sans-serif;
       fill: black;
     }
+  }
+
+  .feels-like-pointer {
+    stroke: #8294AD;
+    marker-end: url(#arrowhead);
+    stroke-width: 1px;
+    fill: none;
   }
 }
 
