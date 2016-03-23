@@ -36,7 +36,7 @@
 
             // Debounce to avoid flashing a different map before the feelsLike shows up
             scope.$watchGroup(['city', 'feelsLike'], drawGlobe);
-            $($window).on('resize', _.debounce(drawGlobe, 50));
+            $($window).on('resize', _.debounce(drawGlobe, 100));
             scope.$on('$destroy', onScopeDestroy);
 
             function drawGlobe() {
@@ -113,6 +113,7 @@
 
             // Add text box with feels like text
             svg.selectAll("g.text-box").remove();
+            svg.selectAll("path.feels-like-pointer").remove();
             var textBox = svg.append("g")
               .attr("class", "text-box");
 
