@@ -167,10 +167,14 @@
                 var featureXY = projection(coords);
                 var x3 = featureXY[0] - arrowPadding;
                 var y3 = featureXY[1];
+                var yDiff = Math.abs(y3 - y1);
                 var isDown = y3 > y1 ? 1 : -1;
-                y3 = y3 - isDown * arrowPadding;
+                // Only add y arrowPadding if the yDiff is greater than it
+                if (yDiff > arrowPadding) {
+                    y3 = y3 - isDown * arrowPadding;
+                }
 
-                var x2 = x3 - (Math.abs(y3 - y1) - arrowPadding);
+                var x2 = x3 - (Math.abs(yDiff - arrowPadding));
                 // Ensure midpoint isn't left of the left edge of arrow line
                 x2 = x1 > x2 ? x1 : x2;
                 var y2 = y1;
