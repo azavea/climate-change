@@ -2,7 +2,7 @@
     'use strict';
 
     /** @ngInject */
-    function ccCityMap($log, $window, Color, WorldBorders) {
+    function ccCityMap($log, $window, Color, CCMath, WorldBorders) {
         var svg, defs;
         var width, height;
         var scale = 500;
@@ -125,6 +125,12 @@
             var arrowPadding = 10;
             var cityTextAnchors = [];
             var text = null;
+            var cityCoords = _.map(features, function (f) {
+                return f.geometry.type === 'Point' ?
+                    f.geometry.coordinates : f.geometry.coordinates[0];
+            });
+            var orientation = CCMath.orient2d(cityCoords);
+            $log.info('Orientation', orientation);
 
             // Add text for each feature, get max width of text as side effect
             for (var i = 0; i < features.length; i++) {
