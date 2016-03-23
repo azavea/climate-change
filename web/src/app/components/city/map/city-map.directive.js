@@ -74,8 +74,6 @@
                 centerAndZoom(mapCenter.geometry.coordinates, mapExtent);
 
                 var path = d3.geo.path().projection(projection).pointRadius(3);
-                // Use a different path for feelsLike so we can keep the pointRadius constant
-                var feelsLikePath = d3.geo.path().projection(projection).pointRadius(5);
 
                 svg.append("path")
                   .datum(graticule)
@@ -92,49 +90,74 @@
                   .attr("class", "basemap boundary")
                   .attr("d", path);
 
-                // Initialize tooltips
-                var tip = d3.tip()
-                    .attr('class', 'd3-tip')
-                    .offset([-10, 0])
-                    .html(function(d){
-                        return d.properties.name;
-                    });
-                svg.call(tip);
+                drawFeelsLikeOverlay(svg, features);
+            }
+        }
 
-                svg.selectAll(".feelslike-dot")
-                    .data(features)
-                  .enter().append("path")
-                    .attr("class", "overlay feelslike-dot")
-                    .attr("d", feelsLikePath)
-                    .attr("style", function (d) {
-                      return 'fill: ' + Color.forYear(d.properties.feelsLikeYear);
-                    })
-                    .on('mouseover', tip.show)
-                    .on('mouseout', tip.hide);
+        /**
+         * Draw feels like text box into proper position based on index and the feature data
+         */
+        function drawFeelsLikeOverlay(container, features) {
 
-                for (var i = 0; i < features.length - 1; i++) {
-                    var a = features[i];
-                    var b = features[i+1];
+            // Use a different path for feelsLike so we can keep the pointRadius constant
+            var feelsLikePath = d3.geo.path().projection(projection).pointRadius(5);
 
-                    var interpolator = d3.geo.interpolate(a.geometry.coordinates[0], b.geometry.coordinates[0]);
-                    var linestring = {
-                      "type": "LineString",
-                      "coordinates": [interpolator(0.2), interpolator(0.8)]
-                    };
-                    svg.append("path")
-                      .datum(linestring)
-                      .attr("class", "overlay feelslike")
-                      .attr("d", feelsLikePath)
-                      .attr("marker-end", "url(#arrowhead)");
+            // Initialize tooltips
+            var tip = d3.tip()
+                .attr('class', 'd3-tip')
+                .offset([-10, 0])
+                .html(function(d){
+                    return d.properties.name;
+                });
+            svg.call(tip);
+
+            // Draw feelslike dots
+            svg.selectAll(".feelslike-dot")
+                .data(features)
+              .enter().append("path")
+                .attr("class", "overlay feelslike-dot")
+                .attr("d", feelsLikePath)
+                .attr("style", function (d) {
+                  return 'fill: ' + Color.forYear(d.properties.feelsLikeYear);
+                })
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide);
+
+
+            // Add text box with feels like text
+            svg.selectAll("g.text-box").remove();
+            var textBox = svg.append("g")
+              .attr("class", "text-box");
+
+            var textAnchorX = width / 8;
+            var textAnchorY = height / 5;   // start 1/5 downt he page, and increment from there
+            var yIncrement = 20;
+            var textGroupPadding = 20;
+
+            // Add text and pointer arrows for each feature
+            for (var i = 0; i < features.length; i++) {
+                var feature = features[i];
+                var preText = getPreText(i);
+                if (preText) {
+                    addTextNode(textBox, textAnchorX, textAnchorY, preText);
+                    textAnchorY += yIncrement;
                 }
+                addTextNode(textBox, textAnchorX, textAnchorY, feature.properties.name)
+                  .attr('style', 'font-weight: bold; fill: ' + Color.forYear(feature.properties.feelsLikeYear));
+                textAnchorY += yIncrement;
+                var postText = getPostText(i);
+                if (postText) {
+                    addTextNode(textBox, textAnchorX, textAnchorY, postText);
+                    textAnchorY += yIncrement;
+                }
+                textAnchorY += textGroupPadding;
+            }
 
-                // var textWidth = width / 3;
-                // svg.append("rect")
-                //   .attr("class", "text-box")
-                //   .attr("width", textWidth)
-                //   .attr("height", height)
-                //   .attr("x", 0)
-                //   .attr("y", 0);
+            function addTextNode(container, x, y, text) {
+                return container.append("text")
+                  .attr('x', x)
+                  .attr('y', y)
+                  .text(text);
             }
         }
 
@@ -172,6 +195,26 @@
 
         function onScopeDestroy() {
             $($window).off('resize');
+        }
+
+        function getPreText(i) {
+            if (i === 2) {
+                return '... and';
+            } else if (i === 1) {
+                return '... may feel like';
+            } else {
+                return '';
+            }
+        }
+
+        function getPostText(i) {
+            if (i === 2) {
+                return 'in 2100.';
+            } else if (i === 1) {
+                return 'in 2050 ...';
+            } else {
+                return '';
+            }
         }
     }
 
