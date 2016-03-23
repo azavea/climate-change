@@ -9,8 +9,8 @@
         function initialize() {
             vm.cities = cities.features;
             vm.groupedCities = _(vm.cities)
-              .groupBy(function (c) { return c.properties.continent; })
-              .mapValues(function (group) { return _.take(group, 10); })
+              .sortBy('properties.admin', 'properties.name')
+              .groupBy(function (c) { return c.properties.region_wb; })
               .value();
 
             vm.onCityClicked = onCityClicked;
