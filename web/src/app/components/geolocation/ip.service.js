@@ -9,7 +9,7 @@
         return module;
 
         function get() {
-            return $http.get('http://whereami.azavea.com').then(function (response) {
+            return $http.get('https://whereami.azavea.com').then(function (response) {
                 if (response.data && response.data.results && response.data.results.location) {
                     var location = response.data.results.location;
                     return turf.point([location.lon, location.lat]);
