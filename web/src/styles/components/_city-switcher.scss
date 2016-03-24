@@ -7,7 +7,8 @@
     }
 
     .modal-body {
-        height: 640px;
-        overflow-y: scroll;
+    	max-height: 76vh;
+    	overflow-y: scroll;
     }
+
 }
