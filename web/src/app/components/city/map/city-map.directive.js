@@ -3,7 +3,7 @@
 
     /** @ngInject */
     function ccCityMap($log, $window, Color, CCMath, WorldBorders) {
-        var svg, defs;
+        var svg;
         var width, height;
         var scale = 500;
         var projection;
@@ -28,7 +28,7 @@
         };
         return module;
 
-        function link(scope, element, attrs) {
+        function link(scope, element) {
             svg = d3.select('.city-map svg');
             $element = element;
 
@@ -111,6 +111,11 @@
                 });
             svg.call(tip);
 
+            // Bail out if we don't have exactly three features
+            if (!(features && features.length === 3)) {
+                return;
+            }
+
             // Add text box with feels like text
             svg.selectAll("g.text-box").remove();
             svg.selectAll("path.feels-like-pointer").remove();
@@ -121,10 +126,8 @@
             var textAnchorY = height / 5;   // start 1/5 down the page, and increment from there...
             var yIncrement = 20;            // by this yIncrement
             var textGroupPadding = 20;
-            var maxTextWidth = 0;
             var arrowPadding = 10;
             var cityTextAnchors = [];
-            var text = null;
             var cityCoords = _.map(features, function (f) {
                 return f.geometry.type === 'Point' ?
                     f.geometry.coordinates : f.geometry.coordinates[0];
@@ -132,39 +135,50 @@
             var orientation = CCMath.orient2d(cityCoords);
             $log.info('Orientation', orientation);
 
-            // Add text for each feature, get max width of text as side effect
-            for (var i = 0; i < features.length; i++) {
-                var feature = features[i];
+            var cityLabelText = [
+                [
+                    {
+                        text: features[0].properties.name,
+                        style: 'font-weight: bold; fill: ' + Color.forYear(features[0].properties.feelsLikeYear)
+                    }
+                ], [
+                    { text: '... may feel like' },
+                    {
+                        text: features[1].properties.name,
+                        style: 'font-weight: bold; fill: ' + Color.forYear(features[1].properties.feelsLikeYear)
+                    },
+                    { text: 'in ' + features[1].properties.feelsLikeYear + ' ...' }
+                ], [
+                    { text: '... and' },
+                    {
+                        text: features[2].properties.name,
+                        style: 'font-weight: bold; fill: ' + Color.forYear(features[2].properties.feelsLikeYear)
+                    },
+                    { text: 'in ' + features[2].properties.feelsLikeYear } //round up for effect...
+                ]
+            ];
 
-                var preText = getPreText(i);
-                if (preText) {
-                    text = addTextNode(textBox, textAnchorX, textAnchorY, preText);
+            _.forEach(cityLabelText, function (labelSet) {
+                var topY = textAnchorY;
+                _.forEach(labelSet, function (labelPiece) {
+                    textBox.append("text")
+                      .attr('x', textAnchorX)
+                      .attr('y', textAnchorY)
+                      .text(labelPiece.text)
+                      .attr('style', labelPiece.style);
                     textAnchorY += yIncrement;
-                    maxTextWidth = updateMaxTextWidth(text, maxTextWidth);
-                }
-
-                text = addTextNode(textBox, textAnchorX, textAnchorY, feature.properties.name)
-                  .attr('style', 'font-weight: bold; fill: ' + Color.forYear(feature.properties.feelsLikeYear));
-                maxTextWidth = updateMaxTextWidth(text, maxTextWidth);
-                cityTextAnchors.push([textAnchorX, textAnchorY]);
-
-                textAnchorY += yIncrement;
-                var postText = getPostText(i);
-                if (postText) {
-                    text = addTextNode(textBox, textAnchorX, textAnchorY, postText);
-                    textAnchorY += yIncrement;
-                    maxTextWidth = updateMaxTextWidth(text, maxTextWidth);
-                }
-
+                });
+                cityTextAnchors.push([textAnchorX, Math.max(topY, textAnchorY - (2 * yIncrement))]);
                 textAnchorY += textGroupPadding;
-            }
+            });
+            var maxTextWidth = textBox.node().getBBox().width;
 
             // now that we have max text width, loop em' again to draw the lines
             var line = d3.svg.line()
                 .x(function (d) { return d[0]; })
                 .y(function (d) { return d[1]; })
                 .interpolate('linear');
-            for (i = 0; i < features.length; i++) {
+            for (var i = 0; i < features.length; i++) {
                 var feature = features[i];
                 var x1 = cityTextAnchors[i][0] + maxTextWidth + arrowPadding;
                 var y1 = cityTextAnchors[i][1] - textGroupPadding / 3.0;
@@ -203,20 +217,6 @@
                 })
                 .on('mouseover', tip.show)
                 .on('mouseout', tip.hide);
-
-            // Helper to append text node to container at x/y with given text
-            function addTextNode(container, x, y, text) {
-                return container.append("text")
-                  .attr('x', x)
-                  .attr('y', y)
-                  .text(text);
-            }
-
-            // Helpler to get width of node and return max of passed maxWidth and node width
-            function updateMaxTextWidth(node, maxWidth) {
-                var width = node.node().getBBox().width;
-                return width > maxWidth ? width : maxWidth;
-            }
         }
 
         /* Sets the map center to the given coordinates, and if extent is set, zooms to
@@ -253,26 +253,6 @@
 
         function onScopeDestroy() {
             $($window).off('resize');
-        }
-
-        function getPreText(i) {
-            if (i === 2) {
-                return '... and';
-            } else if (i === 1) {
-                return '... may feel like';
-            } else {
-                return '';
-            }
-        }
-
-        function getPostText(i) {
-            if (i === 2) {
-                return 'in 2100.';
-            } else if (i === 1) {
-                return 'in 2050 ...';
-            } else {
-                return '';
-            }
         }
     }
 
