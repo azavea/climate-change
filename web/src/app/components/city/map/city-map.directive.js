@@ -202,7 +202,8 @@
                 var lineData = [[x1, y1], [x2, y2], [x3, y3]];
                 svg.append('path')
                   .attr('d', line(lineData))
-                  .attr('class', 'feels-like-pointer');
+                  .attr('class', 'feels-like-pointer')
+                  .attr('marker-end', 'url(#arrowhead)');
             }
 
             // Draw feelslike dots -- last so they show on top
