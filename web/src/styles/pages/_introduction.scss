@@ -1,5 +1,24 @@
 #introduction {
     text-align: center;
+
+    h2,h3,h4 {
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    h2 {
+        font-size: 3.5rem;
+        color: #3D414A;
+    }
+
+    h3,h4 {
+        color: #8D8F94;
+    }
+
+    cc-city-switcher a {
+        color: $color-primary;
+        margin-top: 2.5rem;
+    }
 }
 
 @media (min-width: $screen-sm-min) {

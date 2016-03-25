@@ -1,6 +1,11 @@
 .city-map {
 
+  width: 100%;
+  height: 400px;
+
   svg {
+    width: 100%;
+    height: 400px;
     border: 3px solid #B3B3B3;
   }
 
@@ -54,8 +59,8 @@
   }
 
   .arrow {
-    stroke: #000;
-    fill: #000;
+    stroke: #8294AD;
+    fill: #8294AD;
   }
 
   .legend circle {
@@ -67,6 +72,23 @@
     fill: #777;
     font: 8px sans-serif;
     text-anchor: middle;
+  }
+
+  .text-box {
+    fill: red;
+
+    text {
+      font-size: 18px;
+      font-family: sans-serif;
+      fill: black;
+    }
+  }
+
+  .feels-like-pointer {
+    stroke: #8294AD;
+    marker-end: url(#arrowhead);
+    stroke-width: 1px;
+    fill: none;
   }
 }
 

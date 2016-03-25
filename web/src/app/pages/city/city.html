@@ -1,49 +1,30 @@
-<div class="header">
-    <div class="header-left">
-        <cc-city-switcher cities="cpc.cities"></cc-city-switcher>
-    </div>
-    <div class="header-center">Climate Change Weather Forecast</div>
-    <div class="header-right">About</div>
-</div>
-
-<section id="introduction">
+<section id="introduction" class="introduction">
 
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <h1 class="color-primary">{{ ::cpc.city.properties.name }}, {{ ::cpc.city.properties.adm0_a3 }}</h1>
+                <h2>How will it feel in {{ ::cpc.city.properties.name }}, {{ ::cpc.city.properties.adm0_a3 }}?</h3>
             </div>
         </div>
-    </div>
-
-    <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <cc-city-map class="city-map" width="600" height="400"
-                             cities="cpc.cities"
-                             city="cpc.city"
-                             feels-like="cpc.feelsLike">
-                </cc-city-map>
+                <h4>Our climate is changing. Places we know will feel different by the end of the century.</h4>
             </div>
         </div>
     </div>
 
+    <cc-city-map class="city-map"
+                 cities="cpc.cities"
+                 city="cpc.city"
+                 feels-like="cpc.feelsLike">
+    </cc-city-map>
+
     <div class="container">
-        <div class="row">
-            <div class="col-sm-4 ding">
-                <h3 class="h2 color-primary">Today</h3>
-                <p>Over the next 100 years, the climate of <span class="color-primary">{{ ::cpc.city.properties.name }}</span> will change dramatically.</p>
-            </div>
-            <div class="col-sm-4 ding">
-                <h3 class="h2 color-secondary">2050</h3>
-                <p>By 2050, {{ ::cpc.city.properties.name }} will feel more like today's <span class="color-secondary">{{::cpc.feelsLike['2050'].properties.name }}</span>.</p>
-            </div>
-            <div class="col-sm-4 ding">
-                <h3 class="h2 color-tertiary">2099</h3>
-                <p>By 2099, {{ ::cpc.city.properties.name }} will feel more like today's <span class="color-tertiary">{{ ::cpc.feelsLike['2099'].properties.name }}</span>.</p>
-            </div>
+        <div class="col-sm-12">
+            <cc-city-switcher cities="cpc.cities"></cc-city-switcher>
         </div>
     </div>
+
 </section>
 
 <section id="numbers">
