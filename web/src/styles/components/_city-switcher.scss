@@ -1,6 +1,14 @@
 .city-switcher-modal {
-    .modal-body {
-        height: 640px;
-        overflow-y: scroll;
+
+    .modal-header {
+        .typeahead {
+            margin-top: 10px;
+        }
     }
+
+    .modal-body {
+    	max-height: 76vh;
+    	overflow-y: scroll;
+    }
+
 }
