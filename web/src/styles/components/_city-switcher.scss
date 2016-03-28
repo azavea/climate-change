@@ -22,6 +22,6 @@ cc-city-switcher {
 
     .modal-body {
     	max-height: 76vh;
-    	overflow-y: scroll;
+    	overflow: auto;
     }
 }
