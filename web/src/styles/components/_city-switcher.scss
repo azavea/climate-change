@@ -10,19 +10,18 @@ cc-city-switcher {
         .typeahead {
             margin-top: 10px;
         }
+
+        .modal-region-header {
+            display: block;
+        }
+
+        .modal-region-title {
+            display: inline-block;
+        }
     }
 
     .modal-body {
     	max-height: 76vh;
     	overflow-y: scroll;
-    }
-
-    .modal-region-header {
-        display: block;
-        height: 65px;
-    }
-
-    .modal-region-title {
-        display: inline-block;
     }
 }

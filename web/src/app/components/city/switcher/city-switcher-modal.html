@@ -1,17 +1,22 @@
 <div class="modal-header">
     <button type="button" class="close" aria-label="Close" ng-click="csmc.$dismiss()"><span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title" id="myModalLabel">Switch Cities</h4>
-    <input type="text"
-           class="typeahead"
-           placeholder="Search for your city..."
-           ng-model="csmc.selectedCity"
-           uib-typeahead="city.properties.name for city in csmc.cities | filter:$viewValue | limitTo:10"
-           typeahead-min-length="2"
-           typeahead-editable="false"
-           typeahead-show-hint="true"
-           typeahead-on-select="csmc.onCityClicked($item)"
-           typeahead-template-url="city-switcher-modal-typeahead-item.html" />
-</div>
+    <div ng-if="!csmc.selectedRegion">
+      <h4 class="modal-title" id="myModalLabel">Switch Cities</h4>
+      <input type="text"
+             class="typeahead"
+             placeholder="Search for your city..."
+             ng-model="csmc.selectedCity"
+             uib-typeahead="city.properties.name for city in csmc.cities | filter:$viewValue | limitTo:10"
+             typeahead-min-length="2"
+             typeahead-editable="false"
+             typeahead-show-hint="true"
+             typeahead-on-select="csmc.onCityClicked($item)"
+             typeahead-template-url="city-switcher-modal-typeahead-item.html" />
+    </div>
+    <div ng-if="csmc.selectedRegion" class="modal-region-header">
+      <h3 class="modal-region-title" id="myModalLabel">{{ csmc.selectedRegion.name }}</h3>
+      <a ng-click="csmc.onRegionCleared()">Go Back</a>
+    </div>
 <div class="modal-body">
     <div class="row" ng-if="!csmc.selectedRegion">
         <div class="col-sm-3" ng-repeat="(region_wb, cities) in csmc.groupedCities">
@@ -25,17 +30,13 @@
         </div>
     </div>
     <div ng-if="csmc.selectedRegion">
-        <span class="modal-region-header">
-          <h3 class="modal-region-title">{{ csmc.selectedRegion.name }}</h3>
-          <a ng-click="csmc.onRegionCleared()">Go Back</a>
-        </span>
-        <div class="col-sm-3" ng-repeat="city in csmc.selectedRegion | orderBy: ['properties.admin', 'properties.name'] track by city.properties.cartodb_id">
-          <ul>
-            <li>  
-              <a ng-click="csmc.onCityClicked(city)">{{ ::city.properties.name }}</a>
-            </li>
-          </ul>
-        </div>
+      <div class="col-sm-3" ng-repeat="city in csmc.selectedRegion | orderBy: ['properties.admin', 'properties.name'] track by city.properties.cartodb_id">
+        <ul>
+          <li>  
+            <a ng-click="csmc.onCityClicked(city)">{{ ::city.properties.name }}</a>
+          </li>
+        </ul>
+      </div>
     </div>
 </div>
 
