@@ -13,14 +13,28 @@
            typeahead-template-url="city-switcher-modal-typeahead-item.html" />
 </div>
 <div class="modal-body">
-    <div class="row">
+    <div class="row" ng-if="!csmc.selectedRegion">
         <div class="col-sm-3" ng-repeat="(region_wb, cities) in csmc.groupedCities">
-            <h3>{{ ::region_wb }}</h3>
+            <h4>{{ ::region_wb }}</h4>
             <ul>
-                <li ng-repeat="c in cities track by c.properties.cartodb_id">
+                <li ng-repeat="c in cities | limitTo: 10 | orderBy: ['properties.admin', 'properties.name'] track by c.properties.cartodb_id">
                     <a ng-click="csmc.onCityClicked(c)">{{ ::c.properties.name }}</a>
                 </li>
+                <a ng-click="csmc.onRegionSelected(region_wb)">...</a>
             </ul>
+        </div>
+    </div>
+    <div ng-if="csmc.selectedRegion">
+        <span class="modal-region-header">
+          <h3 class="modal-region-title">{{ csmc.selectedRegion.name }}</h3>
+          <a ng-click="csmc.onRegionCleared()">Go Back</a>
+        </span>
+        <div class="col-sm-3" ng-repeat="city in csmc.selectedRegion | orderBy: ['properties.admin', 'properties.name'] track by city.properties.cartodb_id">
+          <ul>
+            <li>  
+              <a ng-click="csmc.onCityClicked(city)">{{ ::city.properties.name }}</a>
+            </li>
+          </ul>
         </div>
     </div>
 </div>

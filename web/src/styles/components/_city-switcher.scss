@@ -17,4 +17,12 @@ cc-city-switcher {
     	overflow-y: scroll;
     }
 
+    .modal-region-header {
+        display: block;
+        height: 65px;
+    }
+
+    .modal-region-title {
+        display: inline-block;
+    }
 }

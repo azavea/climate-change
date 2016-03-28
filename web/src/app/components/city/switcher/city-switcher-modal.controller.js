@@ -9,15 +9,26 @@
         function initialize() {
             vm.cities = cities.features;
             vm.groupedCities = _(vm.cities)
-              .sortBy('properties.admin', 'properties.name')
               .groupBy(function (c) { return c.properties.region_wb; })
               .value();
 
             vm.onCityClicked = onCityClicked;
+            vm.onRegionSelected = onRegionSelected;
+            vm.onRegionCleared = onRegionCleared;
         }
 
         function onCityClicked(city) {
             vm.$close(city);
+        }
+
+        function onRegionSelected(region){
+            vm.selectedRegion = vm.groupedCities[region];
+            vm.selectedRegion.name = region;
+        }
+
+        function onRegionCleared(){
+            vm.selectedRegion = false;
+            vm.selectedRegion.name = '';
         }
     }
 
