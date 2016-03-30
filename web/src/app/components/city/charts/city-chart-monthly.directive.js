@@ -25,7 +25,7 @@
      *          to: 'C',
      *      }
      *  }
-     * @attr unit: overrides the output unit. 'type' and 'from' must be set in 'options'.
+     * @attr units: overrides the output units. 'type' and 'from' must be set in 'options'.
      /*
 
     /** @ngInject */
@@ -63,7 +63,9 @@
         initialize();
 
         function initialize() {
-            if (!$element.is('canvas')) {
+            // Look for canvas on self or descendant
+            vm.canvas = $element.find('canvas').addBack('canvas').get(0);
+            if (!vm.canvas) {
                 throw 'Monthly chart requires canvas element';
             }
             if (!vm.type) {
@@ -101,7 +103,7 @@
             }
 
             var chartOptions = angular.extend({}, CHART_DEFAULTS, vm.chartOptions);
-            var context = $element.get(0).getContext('2d');
+            var context = vm.canvas.getContext('2d');
             var data = {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
                 datasets: generateDatasets(newData[vm.options.scenario], vm.options.indicators)
@@ -144,7 +146,7 @@
             } else {
                 var unitType = vm.options.units.type;
                 var fromUnit = vm.options.units.from;
-                var toUnit = vm.unit || vm.options.units.to;
+                var toUnit = vm.units || vm.options.units.to;
                 var func = Units.converter(unitType, fromUnit, toUnit);
                 if (func) {
                     return func;
@@ -158,18 +160,18 @@
 
     /** @ngInject */
     function ccChartMonthly() {
-
         var module = {
             restrict: 'A',
+            // templateUrl: 'app/components/city/charts/city-chart-monthly.partial.html',
             template: '',
             scope: {
                 type: '@',
                 data: '=',
                 options: '=',
-                unit: '@'
+                units: '@'
             },
             controller: 'MonthlyChartController',
-            controllerAs: 'mtcc',
+            controllerAs: 'mcc',
             bindToController: true
         };
         return module;

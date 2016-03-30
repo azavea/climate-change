@@ -38,49 +38,34 @@
 <section id="numbers">
     <div class="container">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-lg-8">
                 <h2 class="heading-label">A Look at the Numbers</h2>
-                <p class="h2">Monthly Temperatures</p>
-                <canvas class="chart-large"
-                        cc-chart-monthly
-                        type="line"
-                        data="cpc.indicators"
-                        options="cpc.tempChartConfig">
-                </canvas>
-                <div>
-                    <span class="heading-label">Average Monthly Temperature (&deg;C):</span>
-                    <div class="legend-item color-primary">
-                        <span class="legend-box bg-color-primary"></span>2010
-                    </div>
-                    <div class="legend-item color-secondary">
-                        <span class="legend-box bg-color-secondary"></span>2050
-                    </div>
-                    <div class="legend-item color-tertiary">
-                        <span class="legend-box bg-color-tertiary"></span>2099
-                    </div>
+
+                <div class="chart-large">
+                    <p class="h2">Monthly Temperatures</p>
+                    <svg cc-chart-monthly-temp
+                    data="cpc.indicators"
+                    scenario="rcp45"
+                    units="F">
+                    </svg>
+                    <cc-chart-legend
+                        label="Average Monthly Temperature (&deg;C):"
+                        data="cpc.indicators.rcp45.monthly_max_temp">
                 </div>
 
-                <p class="h2">Monthly Precipitation</p>
-                <canvas class="chart-large"
-                        cc-chart-monthly
-                        type="bar"
-                        data="cpc.indicators"
-                        options="cpc.precipChartConfig">
-                </canvas>
-                <div>
-                    <span class="heading-label">Total Monthly Precipitation (inches):</span>
-                    <div class="legend-item color-primary">
-                        <span class="legend-box bg-color-primary"></span>2010
-                    </div>
-                    <div class="legend-item color-secondary">
-                        <span class="legend-box bg-color-secondary"></span>2050
-                    </div>
-                    <div class="legend-item color-tertiary">
-                        <span class="legend-box bg-color-tertiary"></span>2099
-                    </div>
+                <div class="chart-large">
+                    <p class="h2">Monthly Precipitation</p>
+                    <canvas cc-chart-monthly
+                            type="bar"
+                            data="cpc.indicators"
+                            options="cpc.precipChartConfig">
+                    </canvas>
+                    <cc-chart-legend
+                        label="Total Monthly Precipitation (inches):"
+                        data="cpc.indicators.rcp45.monthly_max_temp">
                 </div>
             </div>
-            <div class="col-md-4 col-lines">
+            <div class="col-lg-4 col-lines">
                 <div class="chart-small"
                     cc-yearly-indicator
                     data="cpc.indicators"
