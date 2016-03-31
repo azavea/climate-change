@@ -159,13 +159,21 @@
             _.forEach(cityLabelText, function (labelSet) {
                 var topY = textAnchorY;
                 _.forEach(labelSet, function (labelPiece) {
-                    textBox.append("text")
+                    var textSvg = textBox.append("text")
                       .attr('x', textAnchorX)
                       .attr('y', textAnchorY)
                       .text(labelPiece.text)
-                      .attr('style', labelPiece.style);
+                      .attr('style', labelPiece.style)
+                      .style('opacity', 0);
                     textAnchorY += yIncrement;
-                });
+
+                    textSvg
+                      .transition()
+                        .duration(3000)
+                        .ease('linear')
+                        .style('opacity', 1.0);
+                        });
+
                 cityTextAnchors.push([textAnchorX, Math.max(topY, textAnchorY - (2 * yIncrement))]);
                 textAnchorY += textGroupPadding;
             });
@@ -210,7 +218,7 @@
             }
 
             // Draw feelslike dots -- last so they show on top
-            svg.selectAll(".feelslike-dot")
+            var dots = svg.selectAll(".feelslike-dot")
                 .data(features)
               .enter().append("path")
                 .attr("class", "overlay feelslike-dot")
@@ -219,7 +227,14 @@
                   return 'fill: ' + Color.forYear(d.properties.feelsLikeYear);
                 })
                 .on('mouseover', tip.show)
-                .on('mouseout', tip.hide);
+                .on('mouseout', tip.hide)
+                .style('opacity', 0);
+
+            dots
+              .transition()
+                .duration(3000)
+                .ease('linear')
+                .style('opacity', 1.0);
         }
 
         /* Sets the map center to the given coordinates, and if extent is set, zooms to
