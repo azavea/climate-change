@@ -195,10 +195,18 @@
                 var y2 = y1;
 
                 var lineData = [[x1, y1], [x2, y2], [x3, y3]];
-                svg.append('path')
+                var linePath = svg.append('path')
                   .attr('d', line(lineData))
-                  .attr('class', 'feels-like-pointer')
-                  .attr('marker-end', 'url(#arrowhead)');
+                  .attr('class', 'feels-like-pointer');
+
+                var totalLength = linePath.node().getTotalLength();
+                linePath
+                  .attr("stroke-dasharray", totalLength + " " + totalLength)
+                  .attr("stroke-dashoffset", totalLength)
+                  .transition()
+                    .duration(3000)
+                    .ease("linear")
+                    .attr("stroke-dashoffset", 0);
             }
 
             // Draw feelslike dots -- last so they show on top
