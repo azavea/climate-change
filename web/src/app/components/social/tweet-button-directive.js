@@ -27,7 +27,6 @@
                 window.twttr=(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);t._e=[];t.ready=function(f){t._e.push(f);};return t;}(document,"script","twitter-wjs"));
             }
 
-
             window.twttr.ready(function(twttr) {
                 // Create button once script loaded.
                 // https://dev.twitter.com/web/tweet-button/javascript-create
@@ -35,7 +34,7 @@
                     tweetUrl,
                     // first child element; same as: document.getElementById('tweet-button')
                     element.children()[0],
-                    {text: tweetText}
+                    {text: tweetText, size: 'large'}
                 );
             });
 
