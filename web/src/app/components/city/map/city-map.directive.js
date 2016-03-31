@@ -156,7 +156,7 @@
                 ]
             ];
 
-            _.forEach(cityLabelText, function (labelSet) {
+            _.forEach(cityLabelText, function (labelSet, i) {
                 var topY = textAnchorY;
                 _.forEach(labelSet, function (labelPiece) {
                     var textSvg = textBox.append("text")
@@ -170,6 +170,7 @@
                     textSvg
                       .transition()
                         .duration(3000)
+                        .delay(i * 3000)
                         .ease('linear')
                         .style('opacity', 1.0);
                         });
@@ -213,6 +214,7 @@
                   .attr("stroke-dashoffset", totalLength)
                   .transition()
                     .duration(3000)
+                    .delay(i * 3000)
                     .ease("linear")
                     .attr("stroke-dashoffset", 0);
             }
@@ -233,8 +235,10 @@
             dots
               .transition()
                 .duration(3000)
-                .ease('linear')
-                .style('opacity', 1.0);
+                .ease('cubic')
+                .style('opacity', 1.0)
+                .delay(function(d, i) { return i * 3000; });
+
         }
 
         /* Sets the map center to the given coordinates, and if extent is set, zooms to
