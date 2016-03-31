@@ -23,5 +23,9 @@ cc-city-switcher {
     .modal-body {
     	max-height: 76vh;
     	overflow: auto;
+
+        h4 {
+            font-size: 1.6rem;
+        }
     }
 }
