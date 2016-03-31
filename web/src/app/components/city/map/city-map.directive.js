@@ -125,7 +125,6 @@
             var textAnchorY = height / 5;   // start 1/5 down the page, and increment from there...
             var yIncrement = 20;            // by this yIncrement
             var textGroupPadding = 20;
-            var arrowPadding = 10;
             var cityTextAnchors = [];
             var cityCoords = _.map(features, function (f) {
                 return f.geometry.type === 'Point' ?
@@ -179,22 +178,18 @@
                 .interpolate('linear');
             for (var i = 0; i < features.length; i++) {
                 var feature = features[i];
-                var x1 = cityTextAnchors[i][0] + maxTextWidth + arrowPadding;
+                var x1 = cityTextAnchors[i][0] + maxTextWidth;
                 var y1 = cityTextAnchors[i][1] - textGroupPadding / 3.0;
 
                 var coords = feature.geometry.type === 'Point' ?
                     feature.geometry.coordinates : feature.geometry.coordinates[0];
                 var featureXY = projection(coords);
-                var x3 = featureXY[0] - arrowPadding;
+                var x3 = featureXY[0];
                 var y3 = featureXY[1];
                 var yDiff = Math.abs(y3 - y1);
                 var isDown = y3 > y1 ? 1 : -1;
-                // Only add y arrowPadding if the yDiff is greater than it
-                if (yDiff > arrowPadding) {
-                    y3 = y3 - isDown * arrowPadding;
-                }
 
-                var x2 = x3 - (Math.abs(yDiff - arrowPadding));
+                var x2 = x3 - yDiff;
                 // Ensure midpoint isn't left of the left edge of arrow line
                 x2 = x1 > x2 ? x1 : x2;
                 var y2 = y1;

@@ -58,11 +58,6 @@
     }
   }
 
-  .arrow {
-    stroke: #8294AD;
-    fill: #8294AD;
-  }
-
   .legend circle {
     fill: none;
     stroke: #ccc;
@@ -86,7 +81,7 @@
 
   .feels-like-pointer {
     stroke: #8294AD;
-    stroke-width: 1px;
+    stroke-width: 1.3px;
     fill: none;
   }
 }
