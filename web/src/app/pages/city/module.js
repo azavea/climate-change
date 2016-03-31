@@ -18,7 +18,8 @@
         'cc.city.charts',
         'cc.city.map',
         'cc.city.ourdata',
-        'cc.city.switcher'
+        'cc.city.switcher',
+        'cc.social.tweet'
     ])
     .config(StateConfig);
 
