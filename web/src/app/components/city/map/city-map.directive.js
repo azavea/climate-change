@@ -16,6 +16,7 @@
         var DOMAIN_MAX_FACTOR = 1.5;
         var RANGE_MIN_FACTOR = 3;
         var RANGE_MAX_FACTOR = 0.4;
+        var ANIMATION_DURATION = 3000; // ms
 
         var module = {
             restrict: 'EA',
@@ -118,6 +119,8 @@
             // Add text box with feels like text
             svg.selectAll("g.text-box").remove();
             svg.selectAll("path.feels-like-pointer").remove();
+            svg.selectAll(".feelslike-dot").remove();
+            svg.selectAll(".line-dot").remove();
             var textBox = svg.append("g")
               .attr("class", "text-box");
 
@@ -131,7 +134,6 @@
                     f.geometry.coordinates : f.geometry.coordinates[0];
             });
             var orientation = CCMath.orient2d(cityCoords);
-            $log.info('Orientation', orientation);
 
             var cityLabelText = [
                 [
@@ -169,8 +171,8 @@
 
                     textSvg
                       .transition()
-                        .duration(3000)
-                        .delay(i * 3000)
+                        .duration(ANIMATION_DURATION)
+                        .delay(i * ANIMATION_DURATION)
                         .ease('linear')
                         .style('opacity', 1.0);
                         });
@@ -196,10 +198,9 @@
                 var x3 = featureXY[0];
                 var y3 = featureXY[1];
                 var yDiff = Math.abs(y3 - y1);
-                var isDown = y3 > y1 ? 1 : -1;
 
                 var x2 = x3 - yDiff;
-                // Ensure midpoint isn't left of the left edge of arrow line
+                // Ensure midpoint isn't left of the left edge of line
                 x2 = x1 > x2 ? x1 : x2;
                 var y2 = y1;
 
@@ -213,10 +214,32 @@
                   .attr("stroke-dasharray", totalLength + " " + totalLength)
                   .attr("stroke-dashoffset", totalLength)
                   .transition()
-                    .duration(3000)
-                    .delay(i * 3000)
+                    .duration(ANIMATION_DURATION)
+                    .delay(i * ANIMATION_DURATION)
                     .ease("linear")
                     .attr("stroke-dashoffset", 0);
+
+                var lineEndDot = svg.append('svg:path')
+                  .attr('class', 'line-dot')
+                  .attr('d', d3.svg.symbol().type('circle'));
+
+                lineEndDot.transition()
+                  .duration(ANIMATION_DURATION)
+                  .delay(i * ANIMATION_DURATION)
+                  .ease('linear')
+                  .attrTween('transform', translateAlong(linePath.node()));
+
+                // Returns a tween for translating along the specified path element.
+                // modified from: http://bl.ocks.org/dem42/e10e933990ee662c9cbd
+                function translateAlong(path) {
+                  var l = path.getTotalLength();
+                  return function(d, i, a) {
+                    return function(t) {
+                      var p = path.getPointAtLength(t * l);
+                      return "translate(" + p.x + "," + p.y + ")";
+                    };
+                  };
+                }
             }
 
             // Draw feelslike dots -- last so they show on top
@@ -234,10 +257,10 @@
 
             dots
               .transition()
-                .duration(3000)
+                .duration(ANIMATION_DURATION)
                 .ease('cubic')
                 .style('opacity', 1.0)
-                .delay(function(d, i) { return i * 3000; });
+                .delay(function(d, i) { return i * ANIMATION_DURATION; });
 
         }
 
