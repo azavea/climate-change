@@ -11,11 +11,11 @@
         function forYear(year) {
             var yearInt = parseInt(year, 10);
             if (yearInt >= 2095) {
-                return '#E1354F';
+                return '#4D096A';
             } else if (yearInt >= 2045) {
-                return '#FE6C23';
+                return '#FFAD00';
             } else if (yearInt >= 2000) {
-                return '#1A9DEC';
+                return '#48B1EF';
             } else {
                 return '#666';
             }
