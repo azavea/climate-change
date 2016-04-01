@@ -5,6 +5,8 @@
     margin-bottom: -10px;
 }
 
+// Note: the .color-primary, .color-secondary, and .color-tertiary classes are used by
+// the Color service in the Angular app to set colors for charts based on year.
 .color-primary {
     color: $color-primary;
 }
