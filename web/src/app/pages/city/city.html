@@ -44,13 +44,13 @@
                 <div class="chart-large">
                     <p class="h2">Monthly Temperatures</p>
                     <svg cc-chart-monthly-temp
-                    data="cpc.indicators"
-                    scenario="rcp45"
-                    units="F">
+                        data="cpc.indicators"
+                        scenario="rcp45"
+                        units="F">
                     </svg>
-                    <cc-chart-legend
+                    <div class="legend-bottom" cc-chart-legend
                         label="Average Monthly Temperature (&deg;C):"
-                        data="cpc.indicators.rcp45.monthly_max_temp">
+                        data="cpc.indicators.rcp45.monthly_max_temp"></div>
                 </div>
 
                 <div class="chart-large">
@@ -60,9 +60,9 @@
                             data="cpc.indicators"
                             options="cpc.precipChartConfig">
                     </canvas>
-                    <cc-chart-legend
+                    <div class="legend-bottom" cc-chart-legend
                         label="Total Monthly Precipitation (inches):"
-                        data="cpc.indicators.rcp45.monthly_max_temp">
+                        data="cpc.indicators.rcp45.monthly_max_temp"></div>
                 </div>
             </div>
             <div class="col-lg-4 col-lines">

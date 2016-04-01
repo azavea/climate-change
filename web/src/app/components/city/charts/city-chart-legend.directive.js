@@ -10,7 +10,7 @@
      /*
 
     /** @ngInject */
-    function ccChartLegendController($scope, Color) {
+    function ChartLegendController($scope, Color) {
         var vm = this;
         initialize();
 
@@ -28,13 +28,13 @@
     /** @ngInject */
     function ccChartLegend() {
         var module = {
-            restrict: 'E',
+            restrict: 'A',
             templateUrl: 'app/components/city/charts/city-chart-legend.partial.html',
             scope: {
                 data: '=',
                 label: '@'
             },
-            controller: 'ccChartLegendController',
+            controller: 'ChartLegendController',
             controllerAs: 'ctl',
             bindToController: true
         };
@@ -42,7 +42,7 @@
     }
 
     angular.module('cc.city.charts')
-    .controller('ccChartLegendController', ccChartLegendController)
+    .controller('ChartLegendController', ChartLegendController)
     .directive('ccChartLegend', ccChartLegend);
 
 })();
