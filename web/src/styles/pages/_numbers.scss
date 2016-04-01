@@ -7,13 +7,30 @@
         padding-right: 0;
         margin-left: auto;
         margin-right: auto;
-        width: 750px;
+        min-width: 750px;
         min-height: 300px;
         display: block;
 
         canvas, svg {
-            width: 750px;
+            min-width: 750px;
             height: 300px;
+        }
+
+        .legend-side {
+            display: inline-block;
+
+            svg {
+                width: 100px;
+            }
+
+            text {
+                font-size: 12px;
+                fill: #666;
+            }
+
+            rect {
+                fill: $color-primary;
+            }
         }
     }
 

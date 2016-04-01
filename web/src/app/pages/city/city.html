@@ -38,7 +38,7 @@
 <section id="numbers">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-md-12">
                 <h2 class="heading-label">A Look at the Numbers</h2>
 
                 <div class="chart-large">
@@ -52,7 +52,8 @@
                         label="Average Monthly Temperature (&deg;C):"
                         data="cpc.indicators.rcp45.monthly_max_temp"></div>
                 </div>
-
+            </div>
+            <div class="col-md-8">
                 <div class="chart-large">
                     <p class="h2">Monthly Precipitation</p>
                     <canvas cc-chart-monthly
@@ -65,7 +66,7 @@
                         data="cpc.indicators.rcp45.monthly_max_temp"></div>
                 </div>
             </div>
-            <div class="col-lg-4 col-lines">
+            <div class="col-md-4 col-lines">
                 <div class="chart-small"
                     cc-yearly-indicator
                     data="cpc.indicators"

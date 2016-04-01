@@ -18,6 +18,12 @@
         var vm = this;
         initialize();
 
+        // Note: these are also hard-coded in a few places further down
+        var indicators = ['monthly_average_max_temp', 'monthly_average_min_temp',
+                          'monthly_max_temp', 'monthly_min_temp'];
+        var dataLabels = ['Monthly Maximum High', 'Monthly Average High',
+                         'Monthly Average Low', 'Monthly Minimum Low'];
+
         function initialize() {
             if (!vm.scenario) {
                 throw 'Chart requires the "scenario" attribute';
@@ -41,11 +47,10 @@
         }
 
         function makeTip(d) {
-            return [monthName(d.monthIndex) + ' ' + d.year,
-                   'Monthly high: ' + Math.round(d.data.monthly_max_temp),
-                   'Average high: ' + Math.round(d.data.monthly_average_max_temp),
-                   'Average low: ' + Math.round(d.data.monthly_average_min_temp),
-                   'Monthly low: ' + Math.round(d.data.monthly_min_temp)].join('<br>');
+            return [monthName(d.monthIndex) + ' ' + d.year].concat(
+                _.map(dataLabels, function (label, i) {
+                    return label + ': ' + Math.round(d.data[indicators[i]]);
+                })).join('<br>');
         }
 
         function buildChart(data) {
@@ -54,8 +59,7 @@
             }
 
             // Munge the data into [month[year:{indicator:value}]]]
-            var indicators = ['monthly_average_max_temp', 'monthly_average_min_temp',
-                              'monthly_max_temp', 'monthly_min_temp'];
+
             var years = _.keys(data[indicators[0]]);
             var monthKeys = _.keys(data[indicators[0]][years[0]]);
             var min, max;
@@ -76,7 +80,7 @@
             });
 
             // Set various positioning and behavior parameters
-            var margin = { top: 10, right: 0, bottom: 20, left: 30 };
+            var margin = { top: 10, right: 165, bottom: 15, left: 30 };
             var minMaxHeight = 3;
             var barPadding = 2;
             var monthPadding = 5;
@@ -86,7 +90,8 @@
 
             var svgElement = $element.find('svg').addBack('svg');
             var height = svgElement.height() - margin.top - margin.bottom;
-            var width = svgElement.width() - margin.left - margin.right;
+            var width = svgElement.parent().width() - margin.left - margin.right;
+            svgElement.width(svgElement.parent().width());
 
             // Make the scales and axes
             var y = d3.scale.linear()
@@ -178,6 +183,38 @@
                 .style("fill", function(d) {return Color.forYear(d.year); })
                 .on('mouseover', tip.show)
                 .on('mouseout', tip.hide);
+
+            // Side legend
+            var legendPlacement = [
+                { y: height * 1/4, height: minMaxHeight },
+                { y: height * 1/3, height: height * 1/3 },
+                { y: height * 2/3, height: 0 },
+                { y: height * 3/4, height: minMaxHeight },
+            ];
+            var legendBars = _.forEach(legendPlacement, function (obj, i) {
+                obj.label = dataLabels[i];
+            });
+
+            var legend = svg.append("g")
+                .attr("class", "legend-side")
+                .attr("width", margin.right)
+                .attr("height", height)
+                .attr("transform", "translate(" + (+width + margin.left + 15) +
+                                              "," + margin.top + ")");
+            legend.selectAll("rect")
+                .data(legendBars)
+              .enter().append("rect")
+                .attr("width", xInner.rangeBand() - barPadding)
+                .attr("y", function (d) { return d.y; })
+                .attr("height", function (d) { return d.height; });
+            legend.selectAll("text")
+                .data(legendBars)
+              .enter().append("text")
+                .attr("dominant-baseline", "central")
+                .attr("class", "legend-item")
+                .attr("x", xInner.rangeBand() + barPadding)
+                .text(function (d) { return d.label; })
+                .attr("y", function (d) { return d.y; });
         }
     }
 
