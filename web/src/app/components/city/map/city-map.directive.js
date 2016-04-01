@@ -53,7 +53,7 @@
                 svg.selectAll("path.overlay").remove();
 
                 projection = d3.geo.orthographic()
-                  .translate([width / 2, height / 2])
+                  .translate([width * 2 / 3, height / 2])
                   .scale(scale)
                   .clipAngle(90)
                   .precision(0.6);
@@ -68,10 +68,9 @@
                     return v[1];
                   })
                   .value());
-                var mapCenter = turf.center(turf.featurecollection(features));
                 var mapExtent = turf.extent(turf.featurecollection(features));
 
-                centerAndZoom(mapCenter.geometry.coordinates, mapExtent);
+                setMapBounds(mapExtent);
 
                 var path = d3.geo.path().projection(projection).pointRadius(3);
 
@@ -203,7 +202,8 @@
                 var lineData = [[x1, y1], [x2, y2], [x3, y3]];
                 svg.append('path')
                   .attr('d', line(lineData))
-                  .attr('class', 'feels-like-pointer');
+                  .attr('class', 'feels-like-pointer')
+                  .attr('marker-end', 'url(#arrowhead)');
             }
 
             // Draw feelslike dots -- last so they show on top
@@ -225,30 +225,30 @@
          * @param {Array} center  coordinates to center the map view on
          * @param {Array} [extent]  bounding box as [west, south, east, north] to zoom to
          */
-        function centerAndZoom(center, extent) {
-            if (!projection) { return; }
+        function setMapBounds(extent) {
+            if (!(projection && extent)) { return; }
 
             var gamma = 23.5;
-            var rotation = _.map(center, function (v) { return v * -1; });
-            rotation.push(gamma);
+            var lowerLeft = projection([extent[0], extent[1]]);
+            var topRight = projection([extent[2], extent[3]]);
+
+            var centerX = (extent[0] + extent[2]) / 2;
+            var centerY = (extent[1] + extent[3]) / 2;
+            var rotation = [centerX * -1, centerY * -1, gamma];
             projection.rotate(rotation);
 
-            if (extent) {
-                // zoom to extent. The basic idea is to figure out how big the extent is
-                // in X and Y as projected and scale based on the bigger one, but the actual
-                // factors used in the scalers were arrived at by trial and error.
-                var lowerLeft = projection([extent[0], extent[1]]);
-                var topRight = projection([extent[2], extent[3]]);
-                var domainMax = DOMAIN_MAX_FACTOR * projection.scale();
-                var xScale = d3.scale.linear().clamp(true)
-                  .domain([0, domainMax]).range([RANGE_MIN_FACTOR * width, RANGE_MAX_FACTOR * width]);
-                var yScale = d3.scale.linear().clamp(true)
-                  .domain([0, domainMax]).range([RANGE_MIN_FACTOR * height, RANGE_MAX_FACTOR * height]);
-                var xDiff = Math.abs(topRight[0] - lowerLeft[0]);
-                var yDiff = Math.abs(topRight[1] - lowerLeft[1]);
-                var scaleFactor = Math.round(Math.min(xScale(xDiff), yScale(yDiff)));
-                projection.scale(scaleFactor);
-            }
+            // zoom to extent. The basic idea is to figure out how big the extent is
+            // in X and Y as projected and scale based on the bigger one, but the actual
+            // factors used in the scalers were arrived at by trial and error.
+            var domainMax = DOMAIN_MAX_FACTOR * projection.scale();
+            var xScale = d3.scale.linear().clamp(true)
+              .domain([0, domainMax]).range([width + RANGE_MIN_FACTOR * width, RANGE_MAX_FACTOR * width]);
+            var yScale = d3.scale.linear().clamp(true)
+              .domain([0, domainMax]).range([RANGE_MIN_FACTOR * height, RANGE_MAX_FACTOR * height]);
+            var xDiff = Math.abs(topRight[0] - lowerLeft[0]);
+            var yDiff = Math.abs(topRight[1] - lowerLeft[1]);
+            var scaleFactor = Math.round(Math.min(xScale(xDiff), yScale(yDiff)));
+            projection.scale(scaleFactor);
         }
 
         function onScopeDestroy() {
