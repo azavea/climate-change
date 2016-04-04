@@ -3,12 +3,12 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <h1>How will it feel in {{ ::cpc.city.properties.name }}, {{ ::cpc.city.properties.adm0_a3 }}?</h1>
+                <h1>How will it feel in {{ ::cpc.city.properties.name }}?</h1>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <h4>Our climate is changing. Places we know will feel different by the end of the century.</h4>
+                <h4>Places we know are changing with the climate.</h4>
             </div>
         </div>
     </div>
@@ -39,7 +39,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h2 class="heading-label">A Look at the Numbers</h2>
+                <h2 class="heading-label">Based on IPCC Model Projections</h2>
+                <p>We compared over 500 current and future city forecasts. Here are the forecasts for {{ ::cpc.city.properties.name }}.</p>
 
                 <div class="chart-large">
                     <p class="h2">Monthly Temperatures</p>
@@ -94,10 +95,12 @@
 <section id="about">
     <div class="container">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <h2 class="heading-label">Use Our Data</h2>
-                <p class="h2">We provide you with instantaneous climate change data</p>
-                <p>Our Climate Change API provides virtually realtime global climate change data that can be used in applications.</p>
+                <p class="h2">Azavea is building tools to help communities prepare and adapt.</p>
+                <p>Tell the story of climate change in your region with key metrics from model data. The raw data we process is over thirteen terabytes large. It is difficult to extract and expensive to store. We use our high-speed, distributed geoprocessing platform to translate scientific data into straightforward information. </p>
+
+                <p>Long term planning decisions require understanding the effects of climate change. Successful investments account for change and uncertainty. Azavea is providing insight into how to plan for climate risks and impacts.</p>
             </div>
         </div>
         <div class="examples">
@@ -108,6 +111,22 @@
     </div>
     <div class="cta">
         <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <p class="h2">Model Data</p>
+
+                    <p>On this page, we are using the NASA Earth Exchange Global Daily Downscaled Projections (NEX-GDDP). The data are available at: <a href="https://cds.nccs.nasa.gov/nex-gddp/">https://cds.nccs.nasa.gov/nex-gddp/</a></p>
+
+                    <p>We constructed the visualizations and similarity calculations using a subset of the data. It uses the RCP-8.5 emission scenario for 2010, 2050, and 2099, and an average of four models.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <p class="h2">Work With Us</p>
+
+                    <p>We are currently focused on building an API-based solution for dynamic processing of the model output data. The shape of the final product is still undetermined. If you can think of a way to use this service in your application, reach out and let's work together to build it.</p>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-sm-6">
                     <p class="h2 no-bold no-margin-top">Ready to integrate climate change data into your app?</p>
