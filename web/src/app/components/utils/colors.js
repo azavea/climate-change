@@ -3,6 +3,8 @@
 
     /** @ngInject */
     function Color() {
+        var secretDiv = angular.element('<div></div>').hide().appendTo('body');
+
         var module = {
             forYear: forYear
         };
@@ -10,15 +12,15 @@
 
         function forYear(year) {
             var yearInt = parseInt(year, 10);
+            var color = '#666';
             if (yearInt >= 2095) {
-                return '#4D096A';
+                color = secretDiv.attr('class', 'color-tertiary').css('color');
             } else if (yearInt >= 2045) {
-                return '#FFAD00';
+                color = secretDiv.attr('class', 'color-secondary').css('color');
             } else if (yearInt >= 2000) {
-                return '#48B1EF';
-            } else {
-                return '#666';
+                color = secretDiv.attr('class', 'color-primary').css('color');
             }
+            return color;
         }
     }
 
