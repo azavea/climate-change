@@ -1,0 +1,4 @@
+<span class="heading-label">{{ ctl.label }}</span>
+<div ng-repeat="year in ctl.years" class="legend-item" ng-style="{'color': year.color}">
+    <span class="legend-box" ng-style="{'background-color': year.color}"></span>{{ year.year }}
+</div>
