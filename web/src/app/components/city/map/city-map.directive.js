@@ -16,6 +16,7 @@
         var DOMAIN_MAX_FACTOR = 1.5;
         var RANGE_MIN_FACTOR = 3;
         var RANGE_MAX_FACTOR = 0.4;
+        var ANIMATION_DURATION = 3000; // ms
 
         var module = {
             restrict: 'EA',
@@ -118,6 +119,8 @@
             // Add text box with feels like text
             svg.selectAll("g.text-box").remove();
             svg.selectAll("path.feels-like-pointer").remove();
+            svg.selectAll(".feelslike-dot").remove();
+            svg.selectAll(".line-dot").remove();
             var textBox = svg.append("g")
               .attr("class", "text-box");
 
@@ -131,7 +134,6 @@
                     f.geometry.coordinates : f.geometry.coordinates[0];
             });
             var orientation = CCMath.orient2d(cityCoords);
-            $log.info('Orientation', orientation);
 
             var cityLabelText = [
                 [
@@ -156,16 +158,25 @@
                 ]
             ];
 
-            _.forEach(cityLabelText, function (labelSet) {
+            _.forEach(cityLabelText, function (labelSet, i) {
                 var topY = textAnchorY;
                 _.forEach(labelSet, function (labelPiece) {
-                    textBox.append("text")
+                    var textSvg = textBox.append("text")
                       .attr('x', textAnchorX)
                       .attr('y', textAnchorY)
                       .text(labelPiece.text)
-                      .attr('style', labelPiece.style);
+                      .attr('style', labelPiece.style)
+                      .style('opacity', 0);
                     textAnchorY += yIncrement;
-                });
+
+                    textSvg
+                      .transition()
+                        .duration(ANIMATION_DURATION)
+                        .delay(i * ANIMATION_DURATION)
+                        .ease('linear')
+                        .style('opacity', 1.0);
+                        });
+
                 cityTextAnchors.push([textAnchorX, Math.max(topY, textAnchorY - (2 * yIncrement))]);
                 textAnchorY += textGroupPadding;
             });
@@ -187,22 +198,52 @@
                 var x3 = featureXY[0];
                 var y3 = featureXY[1];
                 var yDiff = Math.abs(y3 - y1);
-                var isDown = y3 > y1 ? 1 : -1;
 
                 var x2 = x3 - yDiff;
-                // Ensure midpoint isn't left of the left edge of arrow line
+                // Ensure midpoint isn't left of the left edge of line
                 x2 = x1 > x2 ? x1 : x2;
                 var y2 = y1;
 
                 var lineData = [[x1, y1], [x2, y2], [x3, y3]];
-                svg.append('path')
+                var linePath = svg.append('path')
                   .attr('d', line(lineData))
-                  .attr('class', 'feels-like-pointer')
-                  .attr('marker-end', 'url(#arrowhead)');
+                  .attr('class', 'feels-like-pointer');
+
+                var totalLength = linePath.node().getTotalLength();
+                linePath
+                  .attr("stroke-dasharray", totalLength + " " + totalLength)
+                  .attr("stroke-dashoffset", totalLength)
+                  .transition()
+                    .duration(ANIMATION_DURATION)
+                    .delay(i * ANIMATION_DURATION)
+                    .ease("linear")
+                    .attr("stroke-dashoffset", 0);
+
+                var lineEndDot = svg.append('svg:path')
+                  .attr('class', 'line-dot')
+                  .attr('d', d3.svg.symbol().type('circle'));
+
+                lineEndDot.transition()
+                  .duration(ANIMATION_DURATION)
+                  .delay(i * ANIMATION_DURATION)
+                  .ease('linear')
+                  .attrTween('transform', translateAlong(linePath.node()));
+
+                // Returns a tween for translating along the specified path element.
+                // modified from: http://bl.ocks.org/dem42/e10e933990ee662c9cbd
+                function translateAlong(path) {
+                  var l = path.getTotalLength();
+                  return function(d, i, a) {
+                    return function(t) {
+                      var p = path.getPointAtLength(t * l);
+                      return "translate(" + p.x + "," + p.y + ")";
+                    };
+                  };
+                }
             }
 
             // Draw feelslike dots -- last so they show on top
-            svg.selectAll(".feelslike-dot")
+            var dots = svg.selectAll(".feelslike-dot")
                 .data(features)
               .enter().append("path")
                 .attr("class", "overlay feelslike-dot")
@@ -211,7 +252,16 @@
                   return 'fill: ' + Color.forYear(d.properties.feelsLikeYear);
                 })
                 .on('mouseover', tip.show)
-                .on('mouseout', tip.hide);
+                .on('mouseout', tip.hide)
+                .style('opacity', 0);
+
+            dots
+              .transition()
+                .duration(ANIMATION_DURATION)
+                .ease('cubic')
+                .style('opacity', 1.0)
+                .delay(function(d, i) { return i * ANIMATION_DURATION; });
+
         }
 
         /* Sets the map center to the given coordinates, and if extent is set, zooms to
