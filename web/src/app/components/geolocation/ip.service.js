@@ -2,17 +2,21 @@
     'use strict';
 
     /** @ngInject */
-    function IPGeolocation($q) {
+    function IPGeolocation($http) {
         var module = {
             get: get
         };
         return module;
 
         function get() {
-            var dfd = $q.defer();
-            var nearPhilly = [-75.245012, 39.979495];
-            dfd.resolve(turf.point(nearPhilly));
-            return dfd.promise;
+            return $http.get('https://whereami.azavea.com').then(function (response) {
+                if (response.data && response.data.results && response.data.results.location) {
+                    var location = response.data.results.location;
+                    return turf.point([location.lon, location.lat]);
+                } else {
+                    throw new Error('No location from whereami.azavea.com');
+                }
+            });
         }
     }
 
