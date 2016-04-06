@@ -124,7 +124,7 @@
             var textBox = svg.append("g")
               .attr("class", "text-box");
 
-            var textAnchorX = width / 8;
+            var textAnchorX = 0;
             var textAnchorY = height / 5;   // start 1/5 down the page, and increment from there...
             var yIncrement = 20;            // by this yIncrement
             var textGroupPadding = 20;
