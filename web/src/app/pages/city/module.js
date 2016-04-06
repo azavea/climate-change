@@ -15,8 +15,8 @@
         'ui.router',
         'cc.api',
         'cc.geolocation',
-        'cc.city.charts',
         'cc.city.map',
+        'cc.city.charts',
         'cc.city.ourdata',
         'cc.city.switcher',
         'cc.social.tweet'

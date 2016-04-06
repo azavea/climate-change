@@ -3,7 +3,7 @@
 
     /* Makes a legend for an indicator chart, with a label and colored boxes and year labels.
      *
-     * Reads years from the given data object and looks up the associated colors. 
+     * Reads years from the given data object and looks up the associated colors.
      *
      * @attr data: an object with years as keys (such as an indicator object)
      * @attr label: the text label for the legend
