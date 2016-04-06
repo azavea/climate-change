@@ -211,35 +211,24 @@
 
                 var totalLength = linePath.node().getTotalLength();
                 linePath
-                  .attr("stroke-dasharray", totalLength + " " + totalLength)
-                  .attr("stroke-dashoffset", totalLength)
+                  .style('opacity', 0)
                   .transition()
                     .duration(ANIMATION_DURATION)
                     .delay((i - 1) * ANIMATION_DURATION)
                     .ease("linear")
-                    .attr("stroke-dashoffset", 0);
+                    .style('opacity', 1);
 
                 var lineEndDot = svg.append('svg:path')
                   .attr('class', 'line-dot')
-                  .attr('d', d3.svg.symbol().type('circle'));
+                  .attr('d', d3.svg.symbol().type('circle'))
+                  .style('opacity', 0);
 
                 lineEndDot.transition()
                   .duration(ANIMATION_DURATION)
                   .delay((i - 1) * ANIMATION_DURATION)
                   .ease('linear')
-                  .attrTween('transform', translateAlong(linePath.node()));
+                  .style('opacity', 1);
 
-                // Returns a tween for translating along the specified path element.
-                // modified from: http://bl.ocks.org/dem42/e10e933990ee662c9cbd
-                function translateAlong(path) {
-                  var l = path.getTotalLength();
-                  return function(d, i, a) {
-                    return function(t) {
-                      var p = path.getPointAtLength(t * l);
-                      return "translate(" + p.x + "," + p.y + ")";
-                    };
-                  };
-                }
             }
 
             // Draw feelslike dots -- last so they show on top
@@ -258,7 +247,7 @@
             dots
               .transition()
                 .duration(ANIMATION_DURATION)
-                .ease('cubic')
+                .ease('linear')
                 .style('opacity', 1.0)
                 .delay(function(d, i) { return (i - 1) * ANIMATION_DURATION; });
 
