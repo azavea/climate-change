@@ -2,21 +2,21 @@
     'use strict';
 
     var OurDataConfig = [{
-        title: 'Real Estate',
+        title: 'Infrastructure Planning',
         image: 'http://placehold.it/350x350',
-        description: 'Your client is about to make a major investment in a location—show them what that location will be like for the duration of their investment.'
+        description: 'Communities can plan now to adapt to changing heat wave and flood event patterns. From stormwater infrastructure to power grid resiliency, understanding the potential for change now will ensure your community\'s infrastructure is prepared.'
+    }, {
+        title: 'Agriculture',
+        image: 'http://placehold.it/350x350',
+        description: 'Developing locations for long-to-harvest crops like orchards and vineyards relies on a solid understanding of weather patterns. The longevity of these investments depends on planning now for the future climate.'
     }, {
         title: 'Real Estate',
         image: 'http://placehold.it/350x350',
-        description: 'Your client is about to make a major investment in a location—show them what that location will be like for the duration of their investment.'
+        description: 'Real estate investments made now will be subject to variations in weather patterns over time. By knowing this information up front, home buyers and land developers will make better decisions on where to buy or build.'
     }, {
-        title: 'Real Estate',
+        title: 'Academic Research',
         image: 'http://placehold.it/350x350',
-        description: 'Your client is about to make a major investment in a location—show them what that location will be like for the duration of their investment.'
-    }, {
-        title: 'Real Estate',
-        image: 'http://placehold.it/350x350',
-        description: 'Your client is about to make a major investment in a location—show them what that location will be like for the duration of their investment.'
+        description: 'As a society, we are still learning how climate change will affect us. Faster access to climate-related metrics will advance research and help educate public and private sector institutions about the risks, impacts, and adaptation strategies.'
     }];
 
 
