@@ -172,7 +172,7 @@
                     textSvg
                       .transition()
                         .duration(ANIMATION_DURATION)
-                        .delay(i * ANIMATION_DURATION)
+                        .delay((i -1) * ANIMATION_DURATION)
                         .ease('linear')
                         .style('opacity', 1.0);
                         });
@@ -215,7 +215,7 @@
                   .attr("stroke-dashoffset", totalLength)
                   .transition()
                     .duration(ANIMATION_DURATION)
-                    .delay(i * ANIMATION_DURATION)
+                    .delay((i - 1) * ANIMATION_DURATION)
                     .ease("linear")
                     .attr("stroke-dashoffset", 0);
 
@@ -225,7 +225,7 @@
 
                 lineEndDot.transition()
                   .duration(ANIMATION_DURATION)
-                  .delay(i * ANIMATION_DURATION)
+                  .delay((i - 1) * ANIMATION_DURATION)
                   .ease('linear')
                   .attrTween('transform', translateAlong(linePath.node()));
 
@@ -260,7 +260,7 @@
                 .duration(ANIMATION_DURATION)
                 .ease('cubic')
                 .style('opacity', 1.0)
-                .delay(function(d, i) { return i * ANIMATION_DURATION; });
+                .delay(function(d, i) { return (i - 1) * ANIMATION_DURATION; });
 
         }
 
