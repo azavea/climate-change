@@ -118,7 +118,7 @@
 
             // Add text box with feels like text
             svg.selectAll("g.text-box").remove();
-            svg.selectAll("path.feels-like-pointer").remove();
+            svg.selectAll("path.feelslike-line").remove();
             svg.selectAll(".feelslike-dot").remove();
             svg.selectAll(".line-dot").remove();
             var textBox = svg.append("g")
@@ -162,6 +162,7 @@
                 var topY = textAnchorY;
                 _.forEach(labelSet, function (labelPiece) {
                     var textSvg = textBox.append("text")
+                      .attr("class", "text-box-text")
                       .attr('x', textAnchorX)
                       .attr('y', textAnchorY)
                       .text(labelPiece.text)
@@ -207,7 +208,7 @@
                 var lineData = [[x1, y1], [x2, y2], [x3, y3]];
                 var linePath = svg.append('path')
                   .attr('d', line(lineData))
-                  .attr('class', 'feels-like-pointer');
+                  .attr('class', 'feelslike-line');
 
                 var totalLength = linePath.node().getTotalLength();
                 linePath
