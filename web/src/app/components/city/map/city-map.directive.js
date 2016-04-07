@@ -124,7 +124,7 @@
             var textBox = svg.append("g")
               .attr("class", "text-box");
 
-            var textAnchorX = 0;
+            var textAnchorX = $('.charts-header').position().left;
             var textAnchorY = height / 5;   // start 1/5 down the page, and increment from there...
             var yIncrement = 20;            // by this yIncrement
             var textGroupPadding = 20;
@@ -173,7 +173,7 @@
                     textSvg
                       .transition()
                         .duration(ANIMATION_DURATION)
-                        .delay((i -1) * ANIMATION_DURATION)
+                        .delay((i - 1) * ANIMATION_DURATION)
                         .ease('linear')
                         .style('opacity', 1.0);
                         });
