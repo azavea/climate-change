@@ -16,7 +16,7 @@
         var DOMAIN_MAX_FACTOR = 1.5;
         var RANGE_MIN_FACTOR = 3;
         var RANGE_MAX_FACTOR = 0.4;
-        var ANIMATION_DURATION = 3000; // ms
+        var ANIMATION_DURATION = 2000; // ms
 
         var module = {
             restrict: 'EA',
