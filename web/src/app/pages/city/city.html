@@ -1,8 +1,8 @@
-<section id="introduction" class="introduction">
+<section id="introduction" class="introduction" ng-show="cpc.city">
 
     <div class="container">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-12 header">
                 <h1>How will it feel in {{ ::cpc.city.properties.name }}?</h1>
             </div>
         </div>
@@ -35,9 +35,9 @@
 
 </section>
 
-<section id="numbers">
+<section id="numbers" ng-show="cpc.city">
     <div class="container">
-        <div class="row">
+        <div class="row charts-header">
             <div class="col-md-12">
                 <h2 class="heading-label">Based on IPCC Model Projections</h2>
                 <p>We compared over 500 current and future city forecasts. Here are the forecasts for {{ ::cpc.city.properties.name }}.</p>
@@ -92,7 +92,7 @@
         </div>
     </div>
 </section>
-<section id="about">
+<section id="about" ng-show="cpc.indicators">
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
