@@ -4,7 +4,7 @@
 ## Script for creating and formatting a 
 ## separate JSON file for each study city
 ##
-## Azavea Inc, March 2016
+## Azavea Inc, 2016
 ##########################################
 
 import argparse
@@ -13,9 +13,13 @@ import geojson
 import json
 import glob
 import os
+import math
 from collections import defaultdict
-from sklearn import preprocessing
+from sklearn import preprocessing, decomposition
+from sklearn.metrics.pairwise import euclidean_distances
 import numpy as numpy
+import pprint
+import pylab as pl
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger()
@@ -26,17 +30,60 @@ rcp_paths = {
 	}
 months = ["1","2","3","4","5","6","7","8","9","10","11","12"]
 
-def create_base_scaler(cities, all_futures):
-	all2010= list()
+def create_scaler(cities, all_futures, year):
+	master_array= list()
 	for city in cities:
+		tempArray = []
 		city_name = city["properties"]["name"]
 		for month in months:
-			all2010.append(all_futures[city_name]["monthly_total_precip"]["2010"][month])
+			tempArray.append(all_futures[city_name]["monthly_total_precip"][year][month])
 		for month in months:
-			all2010.append(all_futures[city_name]["monthly_average_max_temp"]["2010"][month])
-	X = numpy.array(all2010)
-	X_scale = preprocessing.StandardScaler().fit(X)
-	return X_scale
+			tempArray.append(all_futures[city_name]["monthly_average_max_temp"][year][month])
+		master_array.append(tempArray)
+	X = numpy.array(master_array)
+	return X
+
+def compare_cities(cities, all_futures, scales):
+	logger.info('Comparing cities now')
+	pca_results = []
+	pca = decomposition.PCA(n_components = 2)
+	base = preprocessing.StandardScaler().fit(scales[0])
+	for scale in scales:
+		X = base.transform(scale)
+		pca.fit(X)
+		#pca.n_components = 2 # Statically set from results of base PCA
+		Y = pca.fit_transform(X)
+		pca_results.append(Y)
+	pca_2010 = pca_results.pop(0)
+	total = pca_2010.shape[0]
+	years = ["2050", "2099"]
+
+
+"""	pl.scatter(pca_2010[:, 0], pca_2010[:, 1])
+	for i in range(0,total):
+		pl.annotate(cities[i]["properties"]["nameascii"], pca_2010[i])
+	pl.show()"""
+
+"""
+	for x in range(0, total):
+		feelslike = {}
+		yearIdx = 0
+		for result in pca_results:
+			# keep track of year
+			year = years[yearIdx]
+			# initialize feelslike trackers
+			minDiff = 100000
+			currentIdx = 0
+			currentDiff = euclidean_distances(numpy.array(result), numpy.array(pca_2010))
+			for value in range(0, total):
+				currentDiff = euclidean_distances(result, pca_2010)
+				if currentDiff < minDiff:
+					minDiff = currentDiff
+					minIdx = value 
+			feelslike[year] = cities[minIdx]
+			yearIdx += 1"""
+		# logger.info('Feelslike output for {} : {}:'.format(cities[x]["properties"]["nameascii"], feelslike))
+		# write_files(cities[x], feelslike)
 
 def set_current_rcp(rcp):
 	global current_rcp
@@ -63,7 +110,7 @@ def read_cities(input_path):
 		return cities
 
 def write_files(city, data):
-	docname = city["properties"]["name"].replace(" ", "-") + '--' + city["properties"]["admin"].replace(" ", "-") + '.json'
+	docname = city["properties"]["nameascii"].replace(" ", "-") + '--' + city["properties"]["admin"].replace(" ", "-") + '.json'
 	this_folder_path = rcp_paths[current_rcp]
 	filename = os.path.join(this_folder_path, docname)
 	try:
@@ -161,15 +208,23 @@ def main():
 	all_rcp45_futures = city_jsons_to_dict(files, 'rcp45')
 	#all_rcp85_futures = city_jsons_to_dict(files, 'rcp85')
 
-	# Create base data scale
-	base_scale = create_base_scaler(cities, all_rcp45_futures)
+	# Create data scales
+	base_scale = create_scaler(cities, all_rcp45_futures, "2010")
+	scale2050 = create_scaler(cities, all_rcp45_futures, "2050")
+	scale2099 = create_scaler(cities, all_rcp45_futures, "2099")
+	compare_cities(cities, all_rcp45_futures, [base_scale, scale2050, scale2099])
 
 	#city_comparator(cities_by_cluster, all_rcp45_futures)
 	#city_comparator(cities_by_cluster, all_rcp85_futures)
 
-	"""1. Make 2010 scaler, universal return to main fxn 
-	2. Make scalers and compare for rcp45 2050 2099 
-	3. repeat for 2099"""
+	"""	[X] Make 2010 scaler, universal return to main fxn 
+		[X] Make scalers for rcp45 2050 2099 
+		[X] Compare to 2010
+		[X] Run PCA
+		[ ] Calculate Euc Distance
+		[X] Save out to files
+
+		[ ] repeat all for 2099"""
 
 	logger.info('Comparing complete')
 
