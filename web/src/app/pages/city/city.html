@@ -1,4 +1,10 @@
-<section id="introduction" class="introduction" ng-show="cpc.city">
+<div class="splash-loader" ng-hide="cpc.dataLoaded">
+    <div class="splash-loader-helper">
+        <div class="loader"></div>
+    </div>
+</div>
+
+<section id="introduction" class="introduction" ng-if="cpc.dataLoaded">
 
     <div class="container">
         <div class="row">
@@ -35,7 +41,7 @@
 
 </section>
 
-<section id="numbers" ng-show="cpc.city">
+<section id="numbers" ng-if="cpc.dataLoaded">
     <div class="container">
         <div class="row charts-header">
             <div class="col-md-12">
@@ -92,7 +98,7 @@
         </div>
     </div>
 </section>
-<section id="about" ng-show="cpc.indicators">
+<section id="about" ng-if="cpc.dataLoaded">
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
