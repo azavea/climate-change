@@ -27,15 +27,11 @@
 
     <div class="container">
         <div class="col-sm-12">
-            <cc-city-switcher cities="cpc.cities"></cc-city-switcher>
-        </div>
-        <div class="col-sm-12">
-          <div class="pull-right">
-            <tweet-button
+            <tweet-button class="pull-left"
               city-name="cpc.city.properties.name"
               city-id="cpc.city.properties.cartodb_id" >
             </tweet-button>
-          </div>
+            <cc-city-switcher cities="cpc.cities"></cc-city-switcher>
         </div>
     </div>
 
