@@ -47,10 +47,10 @@
         }
 
         function makeTip(d) {
-            return [monthName(d.monthIndex) + ' ' + d.year].concat(
+            return ['<div class="chart-tip-header">'+ monthName(d.monthIndex) + ' ' + d.year + '</div>'].concat(
                 _.map(dataLabels, function (label, i) {
-                    return label + ': ' + Math.round(d.data[indicators[i]]);
-                })).join('<br>');
+                    return '<div class="chart-tip-data-label">' + label + ': </div>' + '<div class="chart-tip-data">' + Math.round(d.data[indicators[i]]);
+                })).join('</div></br>');
         }
 
         function buildChart(data) {

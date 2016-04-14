@@ -107,7 +107,8 @@
                 .attr('class', 'd3-tip')
                 .offset([-10, 0])
                 .html(function(d){
-                    return d.properties.name;
+                    return '<div class="map-tip-header"></div>' +
+                    '<div class="map-tip-body">' + d.properties.name + '</div>';
                 });
             svg.call(tip);
 
