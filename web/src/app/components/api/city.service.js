@@ -5,7 +5,7 @@
     function City($http, $q, CityList, FeelsLikeStub, strFormat) {
 
         var INDICATOR_URL_TEMPLATE = 'https://s3.amazonaws.com/climate-projection-data/nex-climate-indicators/{0}--{1}.json';
-        var FUTURE_CITY_URL_TEMPLATE = 'https://s3.amazonaws.com/climate-projection-data/feels-like-city-projections/rcp85/{0}--{1}.json';
+        var FUTURE_CITY_URL_TEMPLATE = 'https://s3.amazonaws.com/climate-projection-data/feels-like-city-projections-stats/rcp85/{0}--{1}.json';
 
         var module = {
             indicators: indicators,
