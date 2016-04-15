@@ -28,6 +28,7 @@ rcp_paths = {
 	'rcp45': './data/feelslike/rcp45/',
 	'rcp85': './data/feelslike/rcp85/'
 	}
+years = ["2050", "2099"]
 months = ["1","2","3","4","5","6","7","8","9","10","11","12"]
 
 def create_scaler(cities, all_futures, year):
@@ -39,6 +40,14 @@ def create_scaler(cities, all_futures, year):
 			tempArray.append(all_futures[city_name]["monthly_total_precip"][year][month])
 		for month in months:
 			tempArray.append(all_futures[city_name]["monthly_average_max_temp"][year][month])
+		for month in months:
+			tempArray.append(all_futures[city_name]["monthly_average_min_temp"][year][month])
+		for month in months:
+			tempArray.append(all_futures[city_name]["monthly_max_temp"][year][month])
+		for month in months:
+			tempArray.append(all_futures[city_name]["monthly_min_temp"][year][month])
+		for month in months:
+			tempArray.append(all_futures[city_name]["monthly_frost_days"][year][month])
 		master_array.append(tempArray)
 	X = numpy.array(master_array)
 	return X
@@ -46,44 +55,55 @@ def create_scaler(cities, all_futures, year):
 def compare_cities(cities, all_futures, scales):
 	logger.info('Comparing cities now')
 	pca_results = []
-	pca = decomposition.PCA(n_components = 2)
 	base = preprocessing.StandardScaler().fit(scales[0])
+	pca = decomposition.PCA(n_components = .99).fit(base.transform(scales[0])) # PCA for 99% of variance
 	for scale in scales:
 		X = base.transform(scale)
-		pca.fit(X)
-		#pca.n_components = 2 # Statically set from results of base PCA
-		Y = pca.fit_transform(X)
+		Y = pca.transform(X)
 		pca_results.append(Y)
 	pca_2010 = pca_results.pop(0)
 	total = pca_2010.shape[0]
-	years = ["2050", "2099"]
 
+	# pl.scatter(pca_2010[:, 0], pca_2010[:, 1])
+	# for i in range(total):
+	#	pl.annotate(cities[i]["properties"]["nameascii"], pca_2010[i,0:2])
+	# pl.show()
 
-"""	pl.scatter(pca_2010[:, 0], pca_2010[:, 1])
-	for i in range(0,total):
-		pl.annotate(cities[i]["properties"]["nameascii"], pca_2010[i])
-	pl.show()"""
+	# Create 2D matrix of city to city distance
+	geomkey = [[] for i in range(total)]
+	cityIdx = 0
+	for city in cities:
+		lon1 = city["properties"]["lon"]
+		for comparisoncity in cities:
+			lon2 = comparisoncity["properties"]["lon"]
+			diff = abs(lon2-lon1)
+			if diff > 40:
+				geomkey[cityIdx].append(pow(diff, 2))
+			elif diff > 20:
+				geomkey[cityIdx].append(diff)
+			else:
+				geomkey[cityIdx].append(1)
+		cityIdx += 1
 
-"""
-	for x in range(0, total):
-		feelslike = {}
+	feelslikeresults = []
+	for result in pca_results:
+		currentDiff = euclidean_distances(numpy.array(pca_2010), numpy.array(result))
+		pprint.pprint(currentDiff)
+		for p in range(total):
+			for q in range(total):
+				currentDiff[p][q] = int(currentDiff[p][q] * geomkey[p][q])
+		pprint.pprint(currentDiff)
+		feelslike = numpy.argmin(currentDiff, axis=0)
+		feelslikeresults.append(feelslike)
+
+	for c in range(total):
+		futurefeelslike = {"2050": None, "2099": None}
 		yearIdx = 0
-		for result in pca_results:
-			# keep track of year
-			year = years[yearIdx]
-			# initialize feelslike trackers
-			minDiff = 100000
-			currentIdx = 0
-			currentDiff = euclidean_distances(numpy.array(result), numpy.array(pca_2010))
-			for value in range(0, total):
-				currentDiff = euclidean_distances(result, pca_2010)
-				if currentDiff < minDiff:
-					minDiff = currentDiff
-					minIdx = value 
-			feelslike[year] = cities[minIdx]
-			yearIdx += 1"""
-		# logger.info('Feelslike output for {} : {}:'.format(cities[x]["properties"]["nameascii"], feelslike))
-		# write_files(cities[x], feelslike)
+		for feelslike in feelslikeresults:
+			futurefeelslike[years[yearIdx]] = cities[feelslike[c]]
+			yearIdx +=1
+		write_files(cities[c], futurefeelslike)
+	return
 
 def set_current_rcp(rcp):
 	global current_rcp
@@ -125,43 +145,6 @@ def write_files(city, data):
 		new_file.close()
 		logger.info('Created {}:'.format(new_file))
 		return
-
-def city_comparator(clusters, all_futures):
-	all_clusters = clusters.keys()
-	years = ["2050", "2099"]
-	this_future = {}
-
-	for cluster in all_clusters:
-		this_batch_cities = clusters[cluster]
-		for city in this_batch_cities:
-			city_name = city["properties"]["name"]
-			monthly_ppt = all_futures[city_name]["monthly_total_precip"]
-			monthly_avg_max_t = all_futures[city_name]["monthly_average_max_temp"]
-			# Track similar city
-			min_difference = 10000000
-			# Do the comparisons [Monthly precipitation, Avg Max Temp]
-			for comparison_city in this_batch_cities:
-				if city is not comparison_city:
-					comparison_city_name = comparison_city["properties"]["name"]
-					for year in years:
-						running_difference = 0
-						# Comparison
-						comparison_monthly_ppt = all_futures[comparison_city_name]["monthly_total_precip"]["2010"]
-						comparison_monthly_avg_max_t = all_futures[comparison_city_name]["monthly_average_max_temp"]["2010"]
-						for month in monthly_ppt[year]:
-							running_difference += abs(monthly_ppt[year][month] - comparison_monthly_ppt[month]) * 1000
-							running_difference += abs(monthly_avg_max_t[year][month] - comparison_monthly_avg_max_t[month])
-						#
-						# !!!! NOTE: Difference is not very scientifically calculated. Since temp values are so much larger
-						# than ppt (m^3), ppt is multiplied by 1000 so that differences would be comparable in order of 
-						# magnitude. Should normalize better somehow !!!!!!!
-						#
-						if running_difference < min_difference:
-							min_difference = running_difference
-							this_future[year] = comparison_city
-							this_future[year]["difference"] = min_difference
-			write_files(city, this_future)
-	return
 
 def city_jsons_to_dict(files, rcp):
 	all_futures = defaultdict()
@@ -206,7 +189,7 @@ def main():
 	# Create dictionaries of all city climate projection jsons by RCP
 	# Compare cities output "feelslike" json by RCP
 	all_rcp45_futures = city_jsons_to_dict(files, 'rcp45')
-	#all_rcp85_futures = city_jsons_to_dict(files, 'rcp85')
+	all_rcp85_futures = city_jsons_to_dict(files, 'rcp85')
 
 	# Create data scales
 	base_scale = create_scaler(cities, all_rcp45_futures, "2010")
@@ -214,17 +197,11 @@ def main():
 	scale2099 = create_scaler(cities, all_rcp45_futures, "2099")
 	compare_cities(cities, all_rcp45_futures, [base_scale, scale2050, scale2099])
 
-	#city_comparator(cities_by_cluster, all_rcp45_futures)
-	#city_comparator(cities_by_cluster, all_rcp85_futures)
-
-	"""	[X] Make 2010 scaler, universal return to main fxn 
-		[X] Make scalers for rcp45 2050 2099 
-		[X] Compare to 2010
-		[X] Run PCA
-		[ ] Calculate Euc Distance
-		[X] Save out to files
-
-		[ ] repeat all for 2099"""
+	# Create data scales
+	base_scale = create_scaler(cities, all_rcp85_futures, "2010")
+	scale2050 = create_scaler(cities, all_rcp85_futures, "2050")
+	scale2099 = create_scaler(cities, all_rcp85_futures, "2099")
+	compare_cities(cities, all_rcp85_futures, [base_scale, scale2050, scale2099])
 
 	logger.info('Comparing complete')
 
