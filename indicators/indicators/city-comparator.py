@@ -64,6 +64,7 @@ def compare_cities(cities, all_futures, scales):
 	pca_2010 = pca_results.pop(0)
 	total = pca_2010.shape[0]
 
+	## Uncomment for interactive scattergraph of PCA output---> 
 	# pl.scatter(pca_2010[:, 0], pca_2010[:, 1])
 	# for i in range(total):
 	#	pl.annotate(cities[i]["properties"]["nameascii"], pca_2010[i,0:2])
@@ -77,9 +78,9 @@ def compare_cities(cities, all_futures, scales):
 		for comparisoncity in cities:
 			lon2 = comparisoncity["properties"]["lon"]
 			diff = abs(lon2-lon1)
-			if diff > 40:
+			if diff > 60:
 				geomkey[cityIdx].append(pow(diff, 2))
-			elif diff > 20:
+			elif diff > 40:
 				geomkey[cityIdx].append(diff)
 			else:
 				geomkey[cityIdx].append(1)
