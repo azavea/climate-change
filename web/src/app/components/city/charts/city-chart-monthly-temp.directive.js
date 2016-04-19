@@ -43,7 +43,10 @@
         }
 
         function monthNameShort(index) {
-            return moment.monthsShort()[index];
+            if (index % 2){
+                return moment.monthsShort()[index];
+            }
+            return "";
         }
 
         function makeTip(d) {
@@ -89,15 +92,16 @@
             // Set various positioning and behavior parameters
             var margin = { top: 10, right: 165, bottom: 15, left: 30 };
             var minMaxHeight = 3;
-            var barPadding = 2;
-            var monthPadding = 5;
-            var yScaleMargin = 8;
+            var barPadding = 10;
+            var monthPadding = 10;
+            var yScaleMargin = 10;
+            var legendOffset = 15;
             var animationDuration = 1000;
             var animationDelay = 200;
 
             var svgElement = $element.find('svg').addBack('svg');
             var height = svgElement.height() - margin.top - margin.bottom;
-            var width = svgElement.parent().width() - margin.left - margin.right;
+            var width = svgElement.parent().width() - margin.left - margin.right -legendOffset;
             svgElement.width(svgElement.parent().width());
 
             // Make the scales and axes
@@ -119,10 +123,18 @@
                 .outerTickSize(0)
                 .orient("bottom");
 
+            var xAxisTop = d3.svg.axis()
+                .scale(xOuter)
+                .tickValues([])
+                .outerTickSize(0)
+                .innerTickSize(0)
+                .orient("bottom");
+
             var yAxis = d3.svg.axis()
                 .scale(y)
                 .innerTickSize(-width)
                 .outerTickSize(0)
+                .ticks(5)
                 .orient("left");
 
             // Initialize tooltips
@@ -141,6 +153,9 @@
             svg.append("g").attr("class", "x axis")
                 .attr("transform", "translate(" + margin.left + "," + height + ")")
                 .call(xAxis);
+            svg.append("g").attr("class", "x axis top")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                .call(xAxisTop);
 
             // Create month groups, to be filled with rectangles later
             var month = svg.append("g")
@@ -206,7 +221,7 @@
                 .attr("class", "legend-side")
                 .attr("width", margin.right)
                 .attr("height", height)
-                .attr("transform", "translate(" + (+width + margin.left + 15) +
+                .attr("transform", "translate(" + (+width + margin.left + legendOffset) +
                                               "," + margin.top + ")");
             legend.selectAll("rect")
                 .data(legendBars)
