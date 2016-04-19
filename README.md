@@ -23,6 +23,16 @@ Gulp tasks:
 - `$ gulp protractor` to launch your e2e tests with Protractor
 - `$ gulp protractor:dist` to launch your e2e tests with Protractor on the dist files
 
+# Web app deployment
+
+Inside `./web`:
+
+```bash
+export CC_S3_ID=THE_DEPLOYMENT_AWS_KEY_ID
+export CC_s3_SECRET=THE_DEPLOYMENT_AWS_SECRET_KEY
+gulp && s3_website push
+
+```
 
 # Aggregate data
 
