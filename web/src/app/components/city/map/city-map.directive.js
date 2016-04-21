@@ -108,7 +108,7 @@
                 .offset([-10, 0])
                 .html(function(d){
                     return '<div class="map-tip-header"></div>' +
-                    '<div class="map-tip-body">' + d.properties.name + '</div>';
+                    '<div class="map-tip-body">' + d.properties.nameascii + '</div>';
                 });
             svg.call(tip);
 
@@ -139,20 +139,20 @@
             var cityLabelText = [
                 [
                     {
-                        text: features[0].properties.name,
+                        text: features[0].properties.nameascii,
                         style: 'font-weight: bold; fill: ' + Color.forYear(features[0].properties.feelsLikeYear)
                     }
                 ], [
                     { text: '... may feel like' },
                     {
-                        text: features[1].properties.name,
+                        text: features[1].properties.nameascii,
                         style: 'font-weight: bold; fill: ' + Color.forYear(features[1].properties.feelsLikeYear)
                     },
                     { text: 'in ' + features[1].properties.feelsLikeYear + ' ...' }
                 ], [
                     { text: '... and' },
                     {
-                        text: features[2].properties.name,
+                        text: features[2].properties.nameascii,
                         style: 'font-weight: bold; fill: ' + Color.forYear(features[2].properties.feelsLikeYear)
                     },
                     { text: 'in ' + features[2].properties.feelsLikeYear } //round up for effect...

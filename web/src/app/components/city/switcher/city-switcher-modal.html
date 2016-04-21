@@ -6,7 +6,7 @@
              class="typeahead"
              placeholder="Search for your city..."
              ng-model="csmc.selectedCity"
-             uib-typeahead="city.properties.name for city in csmc.cities | filter:$viewValue | limitTo:10"
+             uib-typeahead="city.properties.nameascii for city in csmc.cities | filter:$viewValue | limitTo:10"
              typeahead-min-length="2"
              typeahead-editable="false"
              typeahead-show-hint="true"
@@ -22,18 +22,18 @@
         <div class="col-sm-3" ng-repeat="(region_wb, cities) in csmc.groupedCities">
             <h4>{{ ::region_wb }}</h4>
             <ul>
-                <li ng-repeat="c in cities | limitTo: 10 | orderBy: ['properties.admin', 'properties.name'] track by c.properties.cartodb_id">
-                    <a ng-click="csmc.onCityClicked(c)">{{ ::c.properties.name }}</a>
+                <li ng-repeat="c in cities | limitTo: 10 track by c.properties.cartodb_id">
+                    <a ng-click="csmc.onCityClicked(c)">{{ ::c.properties.nameascii }}</a>
                 </li>
                 <a ng-click="csmc.onRegionSelected(region_wb)">...</a>
             </ul>
         </div>
     </div>
     <div ng-if="csmc.selectedRegion">
-      <div class="col-sm-3" ng-repeat="city in csmc.selectedRegion | orderBy: ['properties.admin', 'properties.name'] track by city.properties.cartodb_id">
+      <div class="col-sm-3" ng-repeat="city in csmc.selectedRegion | orderBy: 'properties.nameascii' track by city.properties.cartodb_id">
         <ul>
-          <li>  
-            <a ng-click="csmc.onCityClicked(city)">{{ ::city.properties.name }}</a>
+          <li>
+            <a ng-click="csmc.onCityClicked(city)">{{ ::city.properties.nameascii }}</a>
           </li>
         </ul>
       </div>
