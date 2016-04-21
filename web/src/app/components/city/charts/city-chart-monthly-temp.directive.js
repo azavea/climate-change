@@ -43,7 +43,7 @@
         }
 
         function monthNameShort(index) {
-            if (index % 2){
+            if (index % 2) {
                 return moment.monthsShort()[index];
             }
             return "";

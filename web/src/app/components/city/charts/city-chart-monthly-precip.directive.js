@@ -84,7 +84,10 @@
         }
 
         function monthNameShort(index) {
-            return moment.monthsShort()[index];
+            if (index % 2) {
+                return moment.monthsShort()[index];
+            }
+            return "";
         }
 
         function generateDatasets(data, indicators) {
@@ -140,10 +143,18 @@
                 .outerTickSize(0)
                 .orient('bottom');
 
+            var xAxisTop = d3.svg.axis()
+                .scale(x)
+                .tickValues([])
+                .outerTickSize(0)
+                .innerTickSize(0)
+                .orient("bottom");
+
             var yAxis = d3.svg.axis()
                 .scale(y)
                 .innerTickSize(-width)
                 .outerTickSize(0)
+                .ticks(5)
                 .orient('left');
 
             var tip = d3.tip()
@@ -163,6 +174,9 @@
             svg.append("g").attr("class", "x axis")
                 .attr("transform", "translate(" + margin.left + "," + height + ")")
                 .call(xAxis);
+            svg.append("g").attr("class", "x axis top")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                .call(xAxisTop);
 
             var plot = svg.append("g")
                     .attr("transform", "translate(" + (margin.left + (x.rangeBand() / 2)) + "," + margin.top + ")");
