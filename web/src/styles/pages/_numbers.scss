@@ -35,7 +35,7 @@
     }
 
     .chart-small {
-        h3 {
+        div {
             margin-top: 5px;
             margin-bottom: 30px;
         }
@@ -87,5 +87,43 @@
 .col-lines:not(:last-child) {
     @media (min-width: $screen-sm-min) {
         border-right: 1px solid #c2c2c2;
+    }
+}
+
+#yearly-indicator-title {
+
+    .yearly-indicator-label {
+        display: inline-block;
+        font-size: $font-size-h3;
+
+        .glyphicon {
+            display: inline-block;
+            font-size: $font-size-h4;
+        }
+
+        .glyphicon:hover .infotip {
+            opacity: .8;
+        }
+
+        .infotip.container {
+            opacity: 0;
+            position: absolute;
+            left: -8rem;
+            top: 2rem;
+            height: auto;
+            max-width: 25rem;
+            border-radius: .5rem;
+            background-color: black;
+
+            .text {
+                margin: 0;
+                max-width: 100%;
+                color: white;
+                font-size: 1.7rem;
+                padding: 1rem .5rem;
+                text-align: left;
+                font-family: $font-family-sans-serif;
+            }
+        }
     }
 }

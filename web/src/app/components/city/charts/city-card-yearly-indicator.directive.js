@@ -31,6 +31,14 @@
             if (!data || !data[vm.scenario] || !data[vm.scenario][vm.indicator]) {
                 return;
             }
+            // Infotips for
+            var infoOptions = {
+                "Yearly Consecutive Dry Days": "Maximum consecutive days with <1mm precipitation per day",
+                "Yearly Dry Periods": "Number of independent periods having 5 or more consecutive dry days (<1mm precipitation per day)",
+                "Yearly Frost Days": "Number of days with below freezing (32°F or 0°C) minimum temperature"
+            };
+            vm.infotip = infoOptions[vm.label];
+
             vm.values = _.map(data[vm.scenario][vm.indicator], function (obj, year) {
                 return {year: year, value: Math.round(_.values(obj)[0])};
             });
@@ -71,12 +79,13 @@
     function ccYearlyIndicator() {
         var module = {
             restrict: 'A',
-            template: '<svg></svg><h3>{{ ::yic.label }}</h3>',
+            templateUrl: 'app/components/city/charts/city-card-yearly-indicator.html',
             scope: {
                 data: '=',
                 scenario: '@',
                 indicator: '@',
-                label: '@'
+                label: '@',
+                infotip: '@'
             },
             controller: 'YearlyIndicatorController',
             controllerAs: 'yic',
