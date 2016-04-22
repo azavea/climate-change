@@ -23,6 +23,9 @@
             if (!vm.label) {
                 throw 'Chart requires the "label" attribute';
             }
+            if (!vm.infotip) {
+                throw 'Chart requires the "infotip" attribute';
+            }
 
             $scope.$watch(function () { return vm.data; }, buildChart);
         }
@@ -31,13 +34,6 @@
             if (!data || !data[vm.scenario] || !data[vm.scenario][vm.indicator]) {
                 return;
             }
-            // Infotips for
-            var infoOptions = {
-                "Yearly Consecutive Dry Days": "Maximum consecutive days with <1mm precipitation per day",
-                "Yearly Dry Periods": "Number of independent periods having 5 or more consecutive dry days (<1mm precipitation per day)",
-                "Yearly Frost Days": "Number of days with below freezing (32°F or 0°C) minimum temperature"
-            };
-            vm.infotip = infoOptions[vm.label];
 
             vm.values = _.map(data[vm.scenario][vm.indicator], function (obj, year) {
                 return {year: year, value: Math.round(_.values(obj)[0])};
