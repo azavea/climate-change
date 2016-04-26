@@ -23,6 +23,9 @@
             if (!vm.label) {
                 throw 'Chart requires the "label" attribute';
             }
+            if (!vm.infotip) {
+                throw 'Chart requires the "infotip" attribute';
+            }
 
             $scope.$watch(function () { return vm.data; }, buildChart);
         }
@@ -31,6 +34,7 @@
             if (!data || !data[vm.scenario] || !data[vm.scenario][vm.indicator]) {
                 return;
             }
+
             vm.values = _.map(data[vm.scenario][vm.indicator], function (obj, year) {
                 return {year: year, value: Math.round(_.values(obj)[0])};
             });
@@ -71,12 +75,13 @@
     function ccYearlyIndicator() {
         var module = {
             restrict: 'A',
-            template: '<svg></svg><h3>{{ ::yic.label }}</h3>',
+            templateUrl: 'app/components/city/charts/city-card-yearly-indicator.html',
             scope: {
                 data: '=',
                 scenario: '@',
                 indicator: '@',
-                label: '@'
+                label: '@',
+                infotip: '@'
             },
             controller: 'YearlyIndicatorController',
             controllerAs: 'yic',
