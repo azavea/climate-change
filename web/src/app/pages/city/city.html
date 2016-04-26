@@ -8,7 +8,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <h4>Places we know are changing with the climate.</h4>
+                <h4>{{ ::cpc.city.properties.name }} will begin to feel different over the next 100 years. Explore how the city will be impacted by climate change.</h4>
             </div>
         </div>
     </div>
@@ -39,11 +39,10 @@
     <div class="container">
         <div class="row charts-header">
             <div class="col-md-12">
-                <h2 class="heading-label">Based on IPCC Model Projections</h2>
-                <p>We compared over 500 current and future city forecasts. Here are the forecasts for {{ ::cpc.city.properties.nameascii }}.</p>
-
+                <h2>Explore the Data</h2>
+                <p>We compared over 500 current and future city forecasts based on IPCC model projections. Here are the forecasts for {{ ::cpc.city.properties.nameascii }}.</p>
                 <div class="chart-large">
-                    <p class="h2">Monthly Temperatures</p>
+                    <h3>Monthly Temperatures</h3>
                     <svg cc-chart-monthly-temp
                         data="cpc.indicators"
                         scenario="rcp45"
@@ -56,8 +55,8 @@
             </div>
             <div class="col-md-8">
                 <div class="chart-large">
-                    <p class="h2">Monthly Precipitation</p>
-                    <svg cc-chart-monthly-precip
+                    <h3>Monthly Precipitation</h3>
+                    <canvas cc-chart-monthly
                             type="bar"
                             data="cpc.indicators"
                             options="cpc.precipChartConfig">
@@ -100,7 +99,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <h2 class="heading-label">Use Our Data</h2>
-                <p class="h2">Azavea is building tools to help communities prepare and adapt.</p>
+                <h2>Azavea is building tools to help communities prepare and adapt.</h2>
                 <p>Tell the story of climate change in your region with key metrics from model data. The raw data we process is over thirteen terabytes large. It is difficult to extract and expensive to store. We use our high-speed, distributed geoprocessing platform to translate scientific data into straightforward information. </p>
 
                 <p>Long term planning decisions require understanding the effects of climate change. Successful investments account for change and uncertainty. Azavea is providing insight into how to plan for climate risks and impacts.</p>
