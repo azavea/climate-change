@@ -93,7 +93,7 @@
             var margin = { top: 10, right: 165, bottom: 15, left: 30 };
             var minMaxHeight = 3;
             var barPadding = 10;
-            var monthPadding = 10;
+            var monthPadding = 4;
             var yScaleMargin = 10;
             var legendOffset = 15;
             var animationDuration = 1000;
@@ -102,6 +102,7 @@
             var svgElement = $element.find('svg').addBack('svg');
             var height = svgElement.height() - margin.top - margin.bottom;
             var width = svgElement.parent().width() - margin.left - margin.right -legendOffset;
+            var barWidth = 4.5;
             svgElement.width(svgElement.parent().width());
 
             // Make the scales and axes
@@ -201,7 +202,7 @@
             // Add some styles that apply to all the bars
             month.selectAll("rect")
                 .attr("x", function(d) { return xInner(d.year); })
-                .attr("width", xInner.rangeBand() - barPadding)
+                .attr("width", barWidth)
                 .style("fill", function(d) {return Color.forYear(d.year); })
                 .on('mouseover', tip.show)
                 .on('mouseout', tip.hide);
@@ -226,7 +227,7 @@
             legend.selectAll("rect")
                 .data(legendBars)
               .enter().append("rect")
-                .attr("width", xInner.rangeBand() - barPadding)
+                .attr("width", barWidth)
                 .attr("y", function (d) { return d.y; })
                 .attr("height", function (d) { return d.height; });
             legend.selectAll("text")
