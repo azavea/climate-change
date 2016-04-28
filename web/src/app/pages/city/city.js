@@ -19,12 +19,12 @@
                     }, {
                         key: 'monthly_average_min_temp',
                         label: 'Avg Monthly Min Temp'
-                    },
+                    }
                 ],
                 units: {
                     type: 'temp',
                     from: 'K',
-                    to: 'C',
+                    to: 'C'
                 }
             };
             vm.precipChartConfig = {
@@ -34,12 +34,12 @@
                     {
                         key: 'monthly_total_precip',
                         label: 'Total Monthly Precipitation'
-                    },
+                    }
                 ],
                 units: {
                     type: 'precip',
                     from: 'kgPerSquareMeterPerMonth',
-                    to: 'inchesPerMonth',
+                    to: 'inchesPerMonth'
                 }
             };
             vm.cities = City.list();
