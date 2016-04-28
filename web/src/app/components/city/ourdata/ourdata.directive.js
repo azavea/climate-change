@@ -2,12 +2,12 @@
     'use strict';
 
     /** @ngInject */
-    function OurDataController() {
+    function OurDataController(OurDataConfig) {
         var vm = this;
         initialize();
 
         function initialize() {
-
+            vm.data = _.chunk(OurDataConfig, 2);
         }
     }
 
