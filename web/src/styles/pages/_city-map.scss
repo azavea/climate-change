@@ -1,0 +1,28 @@
+#map {
+
+    text-align: center;
+    padding-top: 1.75rem;
+
+    h2,h3,h4 {
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    h2 {
+        color: #3D414A;
+    }
+
+    h3,h4 {
+        color: #8D8F94;
+        margin: 1rem auto 3rem;
+        max-width: 64rem;
+        line-height: $line-height;
+    }
+
+    cc-city-switcher a {
+        color: $color-primary;
+        font-size: $font-size-h5;
+        margin-top: 1.5rem;
+        margin-right: 1.5rem;
+    }
+}
