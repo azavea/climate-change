@@ -155,7 +155,7 @@
                         text: features[2].properties.nameascii,
                         style: 'font-weight: bold; fill: ' + Color.forYear(features[2].properties.feelsLikeYear)
                     },
-                    { text: 'in ' + features[2].properties.feelsLikeYear } //round up for effect...
+                    { text: 'in ' + features[2].properties.feelsLikeYear } + '.' //round up for effect...
                 ]
             ];
 
@@ -168,7 +168,7 @@
                       .attr('y', textAnchorY)
                       .text(labelPiece.text)
                       .attr('style', labelPiece.style)
-                      .style('opacity', 0);
+                      .style('opacity', 1);
                     textAnchorY += yIncrement;
 
                     textSvg
@@ -213,7 +213,7 @@
 
                 var totalLength = linePath.node().getTotalLength();
                 linePath
-                  .style('opacity', 0)
+                  .style('opacity', 1)
                   .transition()
                     .duration(ANIMATION_DURATION)
                     .delay((i - 1) * ANIMATION_DURATION)
@@ -223,7 +223,7 @@
                 var lineEndDot = svg.append('svg:path')
                   .attr('class', 'line-dot')
                   .attr('d', d3.svg.symbol().type('circle'))
-                  .style('opacity', 0);
+                  .style('opacity', 1);
 
                 lineEndDot.transition()
                   .duration(ANIMATION_DURATION)
@@ -244,7 +244,7 @@
                 })
                 .on('mouseover', tip.show)
                 .on('mouseout', tip.hide)
-                .style('opacity', 0);
+                .style('opacity', 1);
 
             dots
               .transition()

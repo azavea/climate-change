@@ -7,7 +7,7 @@
         initialize();
 
         var ROW_HEIGHT = 30;
-        var BAR_GAP = 6;
+        var BAR_GAP = 23;
         var LABEL_WIDTH = 40;
         var BAR_LENGTH_FACTOR = 0.8; // How much of the available space should the longest bar fill
         var ANIMATION_DURATION = 1000;
@@ -55,10 +55,11 @@
                     .attr("transform", function(d, i) {
                         return "translate(0," + i * ROW_HEIGHT + ")"; });
             bar.append("text")
-                .attr("x", LABEL_WIDTH - 5)
+                .attr("x", LABEL_WIDTH - 10)
                 .attr('text-anchor', 'end')
                 .attr("y", ROW_HEIGHT / 2)
                 .attr("dy", ".35em")
+                .attr("class", "chart-label")
                 .text(function(d) { return d.value; });
             bar.append('rect')
                 .attr("x", LABEL_WIDTH)

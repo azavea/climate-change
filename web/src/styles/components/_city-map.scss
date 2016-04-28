@@ -6,7 +6,7 @@
   svg {
     width: 100%;
     height: 400px;
-    background-color: #778AA6;
+    background-color: #F2F4F6;
   }
 
   .graticule {
@@ -15,9 +15,9 @@
   }
 
   .land {
-    fill: #E8EBF0;
-    stroke: #001D47;
-    stroke-width: 0.5;
+      fill: #D1D5DA;
+      stroke: rgba(0, 29, 71, 0.2);
+      stroke-width: 0.5;
   }
 
   .feelslike {
@@ -38,7 +38,8 @@
 
   .boundary {
     fill-opacity: 0;
-    stroke: rgb(120, 130, 144);
+    stroke: rgba(0, 29, 71, 0.2);
+    stroke-width: 0.5;
   }
 
   .symbol {
@@ -65,15 +66,16 @@
     fill: red;
 
     text {
-      font-size: 18px;
+      font-size: 16px;
       font-family: inherit;
-      fill: black;
+      font-weight: 800 !important;
+      fill: #333;
     }
   }
 
   .feelslike-line {
-    stroke: #999;
-    stroke-width: 1.3px;
+    stroke: #444;
+    stroke-width: 1px;
     fill: none;
   }
 }
@@ -81,10 +83,17 @@
 .d3-tip {
   line-height: 1;
   font-weight: bold;
-  padding: 9px;
-  background: rgba(0, 0, 0, 0.8);
+  padding: 10px 14px;
+  background: $color-about-background;
   color: #fff;
   border-radius: 3px;
+  font-size: $font-size-h5;
+  font-weight: 100;
+  line-height: 1.6;
+  border-radius: 0;
+  font-weight: 400;
+  background-color: #444;
+  padding: 10px 14px;
 }
 
 .d3-tip:after {
@@ -100,7 +109,7 @@
 }
 
 .d3-tip.n:after {
-  margin: -1px 0 0 0;
+  margin: -3px 0 0 0;
   top: 100%;
   left: 0;
 }
@@ -111,4 +120,18 @@
 
 .map-tip-body {
 
+}
+
+tweet-button {
+  position: relative;
+  top: 15px;
+}
+
+footer {
+  padding: 4rem 0;
+  background-color: #000;
+  text-align: center;
+  img {
+    max-width: 140px;
+  }
 }

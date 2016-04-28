@@ -115,7 +115,7 @@
 
             var monthKeys = data.labels;
 
-            var margin = { top: 10, right: 165, bottom: 15, left: 30 };
+            var margin = { top: 10, right: 165, bottom: 15, left: 0 };
             var svgElement = $element.find('svg').addBack('svg');
             var height = svgElement.height() - margin.top - margin.bottom;
             var width = svgElement.parent().width() - margin.left - margin.right;
@@ -195,6 +195,7 @@
             group.append("path")
                     .attr("d", function (d) { return lineFunction(d.data); })
                     .attr("fill", "none")
+                    .attr("stroke-width", 3)
                     .attr("stroke", function (d) { return d.strokeColor; });
             group.selectAll("circle")
                 .data(function(d) { return _.map(d.data, function(v) {
@@ -203,7 +204,7 @@
                 .enter().append("circle")
                     .attr("cy", function(d) { return y(d.value); } )
                     .attr("cx", function(d, i) { return x(i); })
-                    .attr("r", 5)
+                    .attr("r", 4)
                     .on('mouseover', tip.show)
                     .on('mouseout', tip.hide);
 
