@@ -20,14 +20,16 @@
 </div>
 <div class="modal-body">
     <div class="row" ng-if="!csmc.selectedRegion">
-        <div class="col-sm-3" ng-repeat="(region_wb, cities) in csmc.groupedCities">
-            <h4>{{ ::region_wb }}</h4>
-            <ul>
-                <li ng-repeat="c in cities | limitTo: 10 track by c.properties.cartodb_id">
-                    <a ng-click="csmc.onCityClicked(c)">{{ ::c.properties.nameascii }}</a>
-                </li>
-                <a ng-click="csmc.onRegionSelected(region_wb)">More ...</a>
-            </ul>
+        <div class="row" ng-repeat="group in csmc.regionKeysBy4">
+            <div class="col-sm-3" ng-repeat="(key, region) in group">
+                <h4>{{ ::region }}</h4>
+                <ul>
+                    <li ng-repeat="c in csmc.groupedCities[region]| limitTo: 10 track by c.properties.cartodb_id">
+                        <a ng-click="csmc.onCityClicked(c)">{{ ::c.properties.nameascii }}</a>
+                    </li>
+                    <a ng-click="csmc.onRegionSelected(region)">...</a>
+                </ul>
+            </div>
         </div>
     </div>
     <div ng-if="csmc.selectedRegion">

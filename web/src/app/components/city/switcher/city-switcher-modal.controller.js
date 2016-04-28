@@ -11,6 +11,8 @@
             vm.groupedCities = _(vm.cities)
               .groupBy(function (c) { return c.properties.region_wb; })
               .value();
+            // For correct rendering, organize city groups into groups of 4
+            vm.regionKeysBy4 = _.chunk(Object.keys(vm.groupedCities), 4);
 
             vm.onCityClicked = onCityClicked;
             vm.onRegionSelected = onRegionSelected;
