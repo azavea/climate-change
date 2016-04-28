@@ -90,13 +90,13 @@
             });
 
             // Set various positioning and behavior parameters
-            var margin = { top: 10, right: 165, bottom: 15, left: 30 };
+            var margin = { top: 10, right: 165, bottom: 15, left: 0 };
             var minMaxHeight = 3;
             var barPadding = 10;
             var monthPadding = 4;
             var yScaleMargin = 10;
             var legendOffset = 15;
-            var animationDuration = 1000;
+            var animationDuration = 0;
             var animationDelay = 200;
 
             var svgElement = $element.find('svg').addBack('svg');
