@@ -116,6 +116,62 @@
                 return;
             }
 
+            // Persist original 3 features for map orientation before the array is chopped up
+            var originalFeatures = angular.extend({}, features);
+
+            // Filter features for unique results, generate appropraite map message
+            function makeCityLabel (features) {
+                var label = [];
+                var temp = [];
+                label.push([{
+                        text: features[0].properties.nameascii,
+                        style: 'font-weight: bold; fill: ' + Color.forYear(features[0].properties.feelsLikeYear)
+                    }]);
+                if (features[1]) {
+                    temp = [
+                        { text: '... may feel like' },
+                        {
+                            text: features[1].properties.nameascii,
+                            style: 'font-weight: bold; fill: ' + Color.forYear(features[1].properties.feelsLikeYear)
+                        },
+                        { text: 'in ' + features[1].properties.feelsLikeYear + ' ...' }
+                    ];
+                    label.push(temp);
+                }
+                if (features[2]) {
+                    temp = [
+                        { text: '... and' },
+                        {
+                            text: features[2].properties.nameascii,
+                            style: 'font-weight: bold; fill: ' + Color.forYear(features[2].properties.feelsLikeYear)
+                        },
+                        { text: 'in ' + features[2].properties.feelsLikeYear + '.'} //round up for effect...
+                    ];
+                    label.push(temp);
+                }
+                return label;
+            }
+
+            var city1 = features[0].properties.cartodb_id;
+            var city2 = features[1].properties.cartodb_id;
+            var city3 = features[2].properties.cartodb_id;
+            var cityLabelText = [];
+            // If the city maintains it's climate
+            if (city1 === city2 && city1 === city3) {
+                features.splice(1,2);
+                cityLabelText = makeCityLabel(features);
+                var temp = { text: '...may feel about the same.' };
+                cityLabelText[0].push(temp);
+            } else {
+                // Cases of 2 or 3 different projected climates
+                if (city1 === city2) {
+                    features.splice(1, 1);
+                } else if (city2 === city3 || city1 === city3) {
+                    features.splice(2, 1);
+                }
+                cityLabelText = makeCityLabel(features);
+            }
+
             // Add text box with feels like text
             svg.selectAll("g.text-box").remove();
             svg.selectAll("path.feelslike-line").remove();
@@ -129,36 +185,13 @@
             var yIncrement = 20;            // by this yIncrement
             var textGroupPadding = 20;
             var cityTextAnchors = [];
-            var cityCoords = _.map(features, function (f) {
+            var cityCoords = _.map(originalFeatures, function (f) {
                 return f.geometry.type === 'Point' ?
                     f.geometry.coordinates : f.geometry.coordinates[0];
             });
             var orientation = CCMath.orient2d(cityCoords);
 
-            var cityLabelText = [
-                [
-                    {
-                        text: features[0].properties.nameascii,
-                        style: 'font-weight: bold; fill: ' + Color.forYear(features[0].properties.feelsLikeYear)
-                    }
-                ], [
-                    { text: '... may feel like' },
-                    {
-                        text: features[1].properties.nameascii,
-                        style: 'font-weight: bold; fill: ' + Color.forYear(features[1].properties.feelsLikeYear)
-                    },
-                    { text: 'in ' + features[1].properties.feelsLikeYear + ' ...' }
-                ], [
-                    { text: '... and' },
-                    {
-                        text: features[2].properties.nameascii,
-                        style: 'font-weight: bold; fill: ' + Color.forYear(features[2].properties.feelsLikeYear)
-                    },
-                    { text: 'in ' + features[2].properties.feelsLikeYear } + '.' //round up for effect...
-                ]
-            ];
-
-            _.forEach(cityLabelText, function (labelSet) {
+            _.forEach(cityLabelText, function (labelSet, i) {
                 var topY = textAnchorY;
                 _.forEach(labelSet, function (labelPiece) {
                     textBox.append("text")
