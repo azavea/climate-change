@@ -16,7 +16,6 @@
         var DOMAIN_MAX_FACTOR = 1.5;
         var RANGE_MIN_FACTOR = 3;
         var RANGE_MAX_FACTOR = 0.4;
-        var ANIMATION_DURATION = 2000; // ms
 
         var module = {
             restrict: 'EA',
@@ -159,10 +158,10 @@
                 ]
             ];
 
-            _.forEach(cityLabelText, function (labelSet, i) {
+            _.forEach(cityLabelText, function (labelSet) {
                 var topY = textAnchorY;
                 _.forEach(labelSet, function (labelPiece) {
-                    var textSvg = textBox.append("text")
+                    textBox.append("text")
                       .attr("class", "text-box-text")
                       .attr('x', textAnchorX)
                       .attr('y', textAnchorY)
@@ -170,14 +169,7 @@
                       .attr('style', labelPiece.style)
                       .style('opacity', 1);
                     textAnchorY += yIncrement;
-
-                    textSvg
-                      .transition()
-                        .duration(ANIMATION_DURATION)
-                        .delay((i - 1) * ANIMATION_DURATION)
-                        .ease('linear')
-                        .style('opacity', 1.0);
-                        });
+                });
 
                 cityTextAnchors.push([textAnchorX, Math.max(topY, textAnchorY - (2 * yIncrement))]);
                 textAnchorY += textGroupPadding;
@@ -209,28 +201,8 @@
                 var lineData = [[x1, y1], [x2, y2], [x3, y3]];
                 var linePath = svg.append('path')
                   .attr('d', line(lineData))
-                  .attr('class', 'feelslike-line');
-
-                var totalLength = linePath.node().getTotalLength();
-                linePath
-                  .style('opacity', 1)
-                  .transition()
-                    .duration(ANIMATION_DURATION)
-                    .delay((i - 1) * ANIMATION_DURATION)
-                    .ease("linear")
-                    .style('opacity', 1);
-
-                var lineEndDot = svg.append('svg:path')
-                  .attr('class', 'line-dot')
-                  .attr('d', d3.svg.symbol().type('circle'))
+                  .attr('class', 'feelslike-line')
                   .style('opacity', 1);
-
-                lineEndDot.transition()
-                  .duration(ANIMATION_DURATION)
-                  .delay((i - 1) * ANIMATION_DURATION)
-                  .ease('linear')
-                  .style('opacity', 1);
-
             }
 
             // Draw feelslike dots -- last so they show on top
@@ -242,17 +214,9 @@
                 .attr("style", function (d) {
                   return 'fill: ' + Color.forYear(d.properties.feelsLikeYear);
                 })
+                .style('opacity', 1)
                 .on('mouseover', tip.show)
-                .on('mouseout', tip.hide)
-                .style('opacity', 1);
-
-            dots
-              .transition()
-                .duration(ANIMATION_DURATION)
-                .ease('linear')
-                .style('opacity', 1.0)
-                .delay(function(d, i) { return (i - 1) * ANIMATION_DURATION; });
-
+                .on('mouseout', tip.hide);
         }
 
         /* Sets the map center to the given coordinates, and if extent is set, zooms to
