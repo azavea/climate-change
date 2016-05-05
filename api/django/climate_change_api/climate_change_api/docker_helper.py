@@ -15,4 +15,3 @@ def wait_for_database():
             success = True
         except socket.error:
             sleep(20)
-            exit()  # causes this worker to restart
