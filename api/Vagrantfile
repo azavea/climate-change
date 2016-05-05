@@ -24,8 +24,8 @@ Vagrant.configure(2) do |config|
     vb.cpus = 2
   end
 
-  # basic web port
-  config.vm.network :forwarded_port, guest: 1234, host: Integer(ENV.fetch("CC_PORT_1234", 1234))
+  # django port
+  config.vm.network :forwarded_port, guest: 8080, host: Integer(ENV.fetch("CC_PORT_8080", 8080))
 
   config.ssh.forward_x11 = true
 

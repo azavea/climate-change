@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import docker_helper
+
+docker_helper.wait_for_database()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,6 +27,7 @@ SECRET_KEY = '%l9qk2!f-xvdm!*rrb%!r%$qmei!de@hyc0a_z0!hq(&$g63fs'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
 
 ALLOWED_HOSTS = []
 
@@ -76,8 +80,11 @@ WSGI_APPLICATION = 'climate_change_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': os.getenv('CC_DB_DATABSE', 'climate'),
+        'USER': os.getenv('CC_DB_USER', 'climate'),
+        'PASSWORD': os.getenv('CC_DB_PASSWORD', 'climate'),
+        'HOST': os.getenv('CC_DB_HOST', 'postgres')
     }
 }
 
