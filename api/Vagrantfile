@@ -40,7 +40,7 @@ Vagrant.configure(2) do |config|
 
       cd /vagrant/deployment/ansible && \
       ANSIBLE_FORCE_COLOR=1 PYTHONUNBUFFERED=1 ANSIBLE_CALLBACK_WHITELIST=profile_tasks \
-      ansible-playbook -u vagrant -i 'localhost,' --extra-vars "lambda_alias=#{ENV.fetch("USER", "vagrant")} aws_profile=climate" \
+      ansible-playbook -u vagrant -i 'localhost,' --extra-vars "dev_user=#{ENV.fetch("USER", "vagrant")} aws_profile=climate" \
           cc-api.yml
       cd /vagrant
       su vagrant ./scripts/console django './manage.py migrate'
