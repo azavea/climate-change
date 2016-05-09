@@ -50,11 +50,13 @@
 
             findCity().then(function(city) {
                 vm.city = city;
+                vm.cityLoaded = true;
                 return loadIndicators(city);
             }).then(function (cityData) {
                 vm.indicators = cityData[0];
                 vm.feelsLike = cityData[1];
                 $log.debug(vm.indicators, vm.feelsLike);
+                vm.dataLoaded = true;
             }).catch(onLoadError);
         }
 

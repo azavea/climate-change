@@ -12,6 +12,7 @@
     }
 
     angular.module('cc.page.city', [
+        'ngAnimate',
         'ui.router',
         'cc.api',
         'cc.geolocation',

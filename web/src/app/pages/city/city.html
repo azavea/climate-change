@@ -1,9 +1,27 @@
-<section id="introduction" class="introduction" ng-show="cpc.city">
+<section id="splash" ng-hide="cpc.cityLoaded">
+    <!-- This section is duplicated in index.html so that we can show something before the
+            angular application loads, any changes made here should be duplicated there -->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 header">
+                <h1 class="h2">How will it feel in ...</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 header">
+                <div class="loader"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="introduction" class="introduction fade-in" ng-if="cpc.cityLoaded">
 
     <div class="container">
         <div class="row">
             <div class="col-sm-12 header">
-                <h1 class="h2">How will it feel in {{ ::cpc.city.properties.nameascii }}?</h1>
+                <h1 ng-if="cpc.city" class="h2">How will it feel in {{ ::cpc.city.properties.nameascii }}?</h1>
+                <h1 ng-if="!cpc.city" class="h2">How will it feel in ...</h1>
             </div>
         </div>
         <div class="row">
@@ -12,6 +30,10 @@
             </div>
         </div>
     </div>
+
+</section>
+
+<section id="map" class="fade-in" ng-if="cpc.dataLoaded">
 
     <cc-city-map class="city-map"
                  cities="cpc.cities"
@@ -33,7 +55,7 @@
 
 </section>
 
-<section id="numbers" ng-show="cpc.city">
+<section id="numbers" class="fade-in" ng-if="cpc.dataLoaded">
 
     <div class="container">
         <div class="row charts-header">
@@ -101,7 +123,7 @@
         </div>
     </div>
 </section>
-<section id="about" ng-show="cpc.indicators">
+<section id="about" ng-class="fade-in" ng-if="cpc.dataLoaded">
     <div class="container">
         <div class="row">
             <div class="col-sm-10">
@@ -142,6 +164,6 @@
         </div>
     </div>
 </section>
-<footer>
+<footer class="fade-in" ng-if="cpc.dataLoaded">
     <a href="http://azavea.com"><img src="/assets/images/azavea-logo-white.png" alt="Azavea logo"></a>
 </footer>
