@@ -22,7 +22,7 @@
         var indicators = ['monthly_average_max_temp', 'monthly_average_min_temp',
                           'monthly_max_temp', 'monthly_min_temp'];
         var dataLabels = ['Monthly Average High', 'Monthly Average Low',
-                          'Monthly Max High', 'Monthly Minimum Low'];
+                          'Monthly Maximum High', 'Monthly Minimum Low'];
 
         function initialize() {
             if (!vm.scenario) {
