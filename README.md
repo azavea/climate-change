@@ -29,7 +29,7 @@ Inside `./web`:
 
 ```bash
 export CC_S3_ID=THE_DEPLOYMENT_AWS_KEY_ID
-export CC_s3_SECRET=THE_DEPLOYMENT_AWS_SECRET_KEY
+export CC_S3_SECRET=THE_DEPLOYMENT_AWS_SECRET_KEY
 gulp && s3_website push
 
 ```
